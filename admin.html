@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Admin Panel | Aadityaa Hospital</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--border:#2a2f45;
+  --primary:#00c48c;--primary-dim:#00a376;--error:#ff5b5b;
+  --text:#e8eaf2;--muted:#7c83a0;--warning:#f5a623;--info:#5bc0eb;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;border:none;font-family:inherit}
+.material-symbols-outlined{font-size:20px;vertical-align:middle}
+
+/* ── HEADER ── */
+.admin-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;height:64px;background:var(--surface);
+  border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;
+}
+.header-brand{display:flex;align-items:center;gap:10px}
+.header-logo{width:36px;height:36px;background:var(--primary);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px}
+.header-title{font-family:'Manrope',sans-serif;font-weight:800;font-size:1rem;color:var(--text)}
+.header-subtitle{font-size:11px;color:var(--muted)}
+.header-user{display:flex;align-items:center;gap:12px}
+.admin-badge{background:rgba(0,196,140,.12);color:var(--primary);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.btn-logout{background:rgba(255,91,91,.1);color:var(--error);border:1px solid rgba(255,91,91,.2);
+  padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;transition:.2s}
+.btn-logout:hover{background:rgba(255,91,91,.2)}
+
+/* ── LAYOUT ── */
+.admin-body{max-width:1200px;margin:0 auto;padding:28px 20px}
+
+/* ── STATS ── */
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:28px}
+@media(min-width:640px){.stats-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:900px){.stats-grid{grid-template-columns:repeat(6,1fr)}}
+.stat-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:18px 16px;display:flex;flex-direction:column;gap:6px;
+}
+.stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+.stat-value{font-size:1.75rem;font-weight:800;line-height:1}
+.stat-green{color:var(--primary)}
+.stat-red{color:var(--error)}
+.stat-blue{color:var(--info)}
+.stat-yellow{color:var(--warning)}
+.stat-white{color:var(--text)}
+
+/* ── TABS ── */
+.tab-bar{display:flex;gap:4px;margin-bottom:20px;background:var(--surface);
+  padding:6px;border-radius:10px;border:1px solid var(--border);width:fit-content}
+.tab-btn{padding:8px 18px;border-radius:7px;font-size:13px;font-weight:600;
+  color:var(--muted);background:transparent;transition:.2s;display:flex;align-items:center;gap:6px}
+.tab-btn.active{background:var(--primary);color:#fff}
+.tab-btn:hover:not(.active){color:var(--text);background:var(--surface2)}
+
+/* ── PANEL ── */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.panel-header{display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;border-bottom:1px solid var(--border)}
+.panel-title{font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px}
+.count-badge{background:var(--surface2);color:var(--muted);padding:2px 8px;
+  border-radius:12px;font-size:11px;font-weight:600}
+
+/* ── TABLE ── */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:600px}
+th{padding:10px 16px;text-align:left;font-size:11px;font-weight:600;
+   color:var(--muted);text-transform:uppercase;letter-spacing:.05em;
+   background:var(--surface2);border-bottom:1px solid var(--border)}
+td{padding:12px 16px;border-bottom:1px solid rgba(42,47,69,.5);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.02)}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;
+  border-radius:20px;font-size:11px;font-weight:700}
+.badge-confirmed{background:rgba(0,196,140,.12);color:var(--primary)}
+.badge-cancelled{background:rgba(255,91,91,.12);color:var(--error)}
+.badge-completed{background:rgba(91,192,235,.12);color:var(--info)}
+.badge-pending{background:rgba(245,166,35,.12);color:var(--warning)}
+.badge-unread{background:rgba(245,166,35,.15);color:var(--warning)}
+.badge-read{background:rgba(124,131,160,.1);color:var(--muted)}
+
+/* ── BUTTONS ── */
+.btn-sm{padding:5px 12px;border-radius:6px;font-size:12px;font-weight:600;transition:.2s;display:inline-flex;align-items:center;gap:4px}
+.btn-confirm{background:rgba(0,196,140,.1);color:var(--primary);border:1px solid rgba(0,196,140,.2)}
+.btn-confirm:hover{background:rgba(0,196,140,.2)}
+.btn-cancel{background:rgba(255,91,91,.08);color:var(--error);border:1px solid rgba(255,91,91,.2)}
+.btn-cancel:hover{background:rgba(255,91,91,.18)}
+.btn-read{background:var(--surface2);color:var(--muted);border:1px solid var(--border)}
+.btn-read:hover{color:var(--text)}
+
+/* ── DOCTOR CARD ── */
+.doctor-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;padding:20px}
+.doctor-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px}
+.doctor-name{font-weight:700;font-size:14px;margin-bottom:4px}
+.doctor-spec{font-size:11px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px}
+.doctor-row{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);margin-top:6px}
+.doctor-row .material-symbols-outlined{font-size:15px;color:var(--primary)}
+.doctor-fee{font-size:18px;font-weight:800;color:var(--primary)}
+
+/* ── EMPTY STATE ── */
+.empty{padding:48px 20px;text-align:center;color:var(--muted)}
+.empty .material-symbols-outlined{font-size:48px;margin-bottom:12px;display:block}
+
+/* ── LOGIN GATE ── */
+#loginGate{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--bg)}
+.login-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;
+  padding:40px 36px;width:100%;max-width:380px}
+.login-logo{width:52px;height:52px;background:var(--primary);border-radius:12px;
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:26px;margin:0 auto 16px}
+.login-title{font-family:'Manrope',sans-serif;font-size:1.25rem;font-weight:800;
+  text-align:center;margin-bottom:6px}
+.login-sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:28px}
+.field-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;
+  letter-spacing:.05em;margin-bottom:6px;display:block}
+.field-input{width:100%;background:var(--surface2);border:1px solid var(--border);
+  border-radius:8px;padding:10px 14px;font-size:13px;color:var(--text);
+  font-family:inherit;outline:none;transition:.2s;margin-bottom:14px}
+.field-input:focus{border-color:var(--primary)}
+.btn-login{width:100%;background:var(--primary);color:#fff;border-radius:8px;
+  padding:12px;font-size:14px;font-weight:700;margin-top:4px;transition:.2s}
+.btn-login:hover{background:var(--primary-dim)}
+.login-error{color:var(--error);font-size:12px;text-align:center;margin-top:8px;display:none}
+
+#adminPanel{display:none}
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN GATE ── -->
+<div id="loginGate">
+  <div class="login-box">
+    <div class="login-logo">🏥</div>
+    <h1 class="login-title">Admin Panel</h1>
+    <p class="login-sub">Aadityaa Hospital · Hyderabad</p>
+    <label class="field-label">Email</label>
+    <input class="field-input" id="adminEmail" type="email" value="admin@aadityaa.com" placeholder="admin@aadityaa.com"/>
+    <label class="field-label">Password</label>
+    <input class="field-input" id="adminPass" type="password" value="admin123" placeholder="••••••••"/>
+    <button class="btn-login" onclick="adminLogin()">Login as Admin</button>
+    <p class="login-error" id="loginErr">Incorrect email or password.</p>
+  </div>
+</div>
+
+<!-- ── ADMIN PANEL ── -->
+<div id="adminPanel">
+  <header class="admin-header">
+    <div class="header-brand">
+      <div class="header-logo">🏥</div>
+      <div>
+        <div class="header-title">Aadityaa Hospital</div>
+        <div class="header-subtitle">Hastinapuram, Hyderabad</div>
+      </div>
+    </div>
+    <div class="header-user">
+      <span class="admin-badge"><span class="material-symbols-outlined" style="font-size:12px">verified</span> Admin</span>
+      <span id="adminName" style="font-size:13px;font-weight:600"></span>
+      <button class="btn-logout" onclick="adminLogout()">
+        <span class="material-symbols-outlined" style="font-size:14px">logout</span> Logout
+      </button>
+    </div>
+  </header>
+
+  <div class="admin-body">
+    <!-- Stats -->
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card"><div class="stat-label">Patients</div><div class="stat-value stat-white" id="s-patients">—</div></div>
+      <div class="stat-card"><div class="stat-label">Doctors</div><div class="stat-value stat-blue" id="s-doctors">—</div></div>
+      <div class="stat-card"><div class="stat-label">Total Bookings</div><div class="stat-value stat-white" id="s-total">—</div></div>
+      <div class="stat-card"><div class="stat-label">Confirmed</div><div class="stat-value stat-green" id="s-confirmed">—</div></div>
+      <div class="stat-card"><div class="stat-label">Cancelled</div><div class="stat-value stat-red" id="s-cancelled">—</div></div>
+      <div class="stat-card"><div class="stat-label">Unread Msgs</div><div class="stat-value stat-yellow" id="s-msgs">—</div></div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('appointments',this)">
+        <span class="material-symbols-outlined">calendar_month</span> Appointments
+      </button>
+      <button class="tab-btn" onclick="switchTab('patients',this)">
+        <span class="material-symbols-outlined">group</span> Patients
+      </button>
+      <button class="tab-btn" onclick="switchTab('doctors',this)">
+        <span class="material-symbols-outlined">stethoscope</span> Doctors
+      </button>
+      <button class="tab-btn" onclick="switchTab('messages',this)">
+        <span class="material-symbols-outlined">mail</span> Messages
+      </button>
+    </div>
+
+    <!-- Appointments Tab -->
+    <div id="tab-appointments" class="panel">
+      <div class="panel-header">
+        <div class="panel-title"><span class="material-symbols-outlined">calendar_month</span> All Appointments <span class="count-badge" id="apt-count">0</span></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>ID</th><th>Patient</th><th>Doctor</th><th>Specialty</th><th>Date</th><th>Slot</th><th>Status</th><th>Actions</th>
+          </tr></thead>
+          <tbody id="aptBody"><tr><td colspan="8" class="empty"><span class="material-symbols-outlined">hourglass_empty</span><br>Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Patients Tab -->
+    <div id="tab-patients" class="panel" style="display:none">
+      <div class="panel-header">
+        <div class="panel-title"><span class="material-symbols-outlined">group</span> Registered Patients <span class="count-badge" id="pat-count">0</span></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Member Since</th></tr></thead>
+          <tbody id="patBody"><tr><td colspan="5" class="empty"><span class="material-symbols-outlined">hourglass_empty</span><br>Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Doctors Tab -->
+    <div id="tab-doctors" class="panel" style="display:none">
+      <div class="panel-header">
+        <div class="panel-title"><span class="material-symbols-outlined">stethoscope</span> Doctors Directory</div>
+      </div>
+      <div class="doctor-grid" id="doctorGrid">Loading...</div>
+    </div>
+
+    <!-- Messages Tab -->
+    <div id="tab-messages" class="panel" style="display:none">
+      <div class="panel-header">
+        <div class="panel-title"><span class="material-symbols-outlined">mail</span> Contact Messages <span class="count-badge" id="msg-count">0</span></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>From</th><th>Email</th><th>Phone</th><th>Message</th><th>Received</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="msgBody"><tr><td colspan="7" class="empty"><span class="material-symbols-outlined">hourglass_empty</span><br>Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'http://localhost:5000';
+let currentTab = 'appointments';
+
+// ── Login ──────────────────────────────────────────────────
+async function adminLogin() {
+  const email = document.getElementById('adminEmail').value;
+  const pass  = document.getElementById('adminPass').value;
+  const err   = document.getElementById('loginErr');
+  err.style.display = 'none';
+
+  const res = await fetch(`${API}/api/login`, {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({email, password: pass})
+  }).catch(() => null);
+
+  if (!res) { err.textContent = 'Cannot connect to Flask server.'; err.style.display = 'block'; return; }
+  const data = await res.json();
+
+  if (!data.success || !data.user.is_admin) {
+    err.textContent = data.message || 'Admin access required.';
+    err.style.display = 'block';
+    return;
+  }
+
+  document.getElementById('loginGate').style.display  = 'none';
+  document.getElementById('adminPanel').style.display  = 'block';
+  document.getElementById('adminName').textContent     = data.user.name;
+  loadStats();
+  loadAppointments();
+}
+
+async function adminLogout() {
+  await fetch(`${API}/api/logout`, {method:'POST', credentials:'include'});
+  location.reload();
+}
+
+// ── Stats ──────────────────────────────────────────────────
+async function loadStats() {
+  const res  = await fetch(`${API}/api/admin/stats`, {credentials:'include'});
+  const data = await res.json();
+  if (!data.success) return;
+  const s = data.stats;
+  document.getElementById('s-patients').textContent  = s.total_patients;
+  document.getElementById('s-doctors').textContent   = s.total_doctors;
+  document.getElementById('s-total').textContent     = s.total_apts;
+  document.getElementById('s-confirmed').textContent = s.confirmed;
+  document.getElementById('s-cancelled').textContent = s.cancelled;
+  document.getElementById('s-msgs').textContent      = s.unread_messages;
+}
+
+// ── Tabs ───────────────────────────────────────────────────
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  ['appointments','patients','doctors','messages'].forEach(t => {
+    document.getElementById(`tab-${t}`).style.display = t === tab ? 'block' : 'none';
+  });
+  currentTab = tab;
+  if (tab === 'appointments') loadAppointments();
+  if (tab === 'patients')     loadPatients();
+  if (tab === 'doctors')      loadDoctors();
+  if (tab === 'messages')     loadMessages();
+}
+
+// ── Appointments ───────────────────────────────────────────
+async function loadAppointments() {
+  const res  = await fetch(`${API}/api/admin/appointments`, {credentials:'include'});
+  const data = await res.json();
+  const body = document.getElementById('aptBody');
+  document.getElementById('apt-count').textContent = data.total || 0;
+
+  if (!data.appointments || !data.appointments.length) {
+    body.innerHTML = `<tr><td colspan="8"><div class="empty"><span class="material-symbols-outlined">calendar_today</span><br>No appointments yet</div></td></tr>`;
+    return;
+  }
+  body.innerHTML = data.appointments.map(a => `
+    <tr>
+      <td><strong>${a.appointment_id}</strong></td>
+      <td>${a.patient_name}<br><span style="color:var(--muted);font-size:11px">${a.patient_phone}</span></td>
+      <td>${a.doctor}</td>
+      <td>${a.specialty}</td>
+      <td>${a.date}</td>
+      <td>${a.time_slot}</td>
+      <td><span class="badge badge-${a.status.toLowerCase()}">${a.status}</span></td>
+      <td style="white-space:nowrap">
+        ${a.status !== 'Confirmed' ? `<button class="btn-sm btn-confirm" onclick="updateApt('${a.appointment_id}','Confirmed')"><span class="material-symbols-outlined" style="font-size:14px">check_circle</span></button> ` : ''}
+        ${a.status !== 'Cancelled' ? `<button class="btn-sm btn-cancel" onclick="updateApt('${a.appointment_id}','Cancelled')"><span class="material-symbols-outlined" style="font-size:14px">cancel</span></button>` : ''}
+      </td>
+    </tr>`).join('');
+}
+
+async function updateApt(id, status) {
+  await fetch(`${API}/api/admin/appointments/${id}`, {
+    method:'PUT', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({status})
+  });
+  loadAppointments();
+  loadStats();
+}
+
+// ── Patients ───────────────────────────────────────────────
+async function loadPatients() {
+  const res  = await fetch(`${API}/api/admin/users`, {credentials:'include'});
+  const data = await res.json();
+  const body = document.getElementById('patBody');
+  document.getElementById('pat-count').textContent = data.total || 0;
+
+  if (!data.users || !data.users.length) {
+    body.innerHTML = `<tr><td colspan="5"><div class="empty"><span class="material-symbols-outlined">group</span><br>No registered patients yet</div></td></tr>`;
+    return;
+  }
+  body.innerHTML = data.users.map(u => `
+    <tr>
+      <td><span style="color:var(--muted);font-size:11px">#${u.id}</span></td>
+      <td><strong>${u.name}</strong></td>
+      <td>${u.email}</td>
+      <td>${u.phone}</td>
+      <td>${u.member_since}</td>
+    </tr>`).join('');
+}
+
+// ── Doctors ────────────────────────────────────────────────
+async function loadDoctors() {
+  const res  = await fetch(`${API}/api/doctors`, {credentials:'include'});
+  const data = await res.json();
+  const grid = document.getElementById('doctorGrid');
+
+  if (!data.doctors || !data.doctors.length) {
+    grid.innerHTML = `<div class="empty"><span class="material-symbols-outlined">stethoscope</span><br>No doctors found</div>`;
+    return;
+  }
+  grid.innerHTML = data.doctors.map(d => `
+    <div class="doctor-card">
+      <div class="doctor-spec">${d.specialty}</div>
+      <div class="doctor-name">${d.name}</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px">${d.qualification}</div>
+      <div class="doctor-fee">${d.fees_display} <span style="font-size:12px;color:var(--muted);font-weight:400">/ consult</span></div>
+      <div class="doctor-row"><span class="material-symbols-outlined">calendar_month</span>${d.available_days.join(', ')}</div>
+      <div class="doctor-row"><span class="material-symbols-outlined">schedule</span>${d.slots.join(' | ')}</div>
+      <div class="doctor-row"><span class="material-symbols-outlined">work</span>${d.experience}</div>
+    </div>`).join('');
+}
+
+// ── Messages ───────────────────────────────────────────────
+async function loadMessages() {
+  const res  = await fetch(`${API}/api/admin/messages`, {credentials:'include'});
+  const data = await res.json();
+  const body = document.getElementById('msgBody');
+  document.getElementById('msg-count').textContent = data.messages ? data.messages.length : 0;
+
+  if (!data.messages || !data.messages.length) {
+    body.innerHTML = `<tr><td colspan="7"><div class="empty"><span class="material-symbols-outlined">mail</span><br>No messages yet</div></td></tr>`;
+    return;
+  }
+  body.innerHTML = data.messages.map(m => `
+    <tr>
+      <td><strong>${m.name}</strong></td>
+      <td style="font-size:12px">${m.email || '—'}</td>
+      <td style="font-size:12px">${m.phone || '—'}</td>
+      <td style="max-width:240px;font-size:12px">${m.message}</td>
+      <td style="font-size:11px;color:var(--muted);white-space:nowrap">${m.received_at}</td>
+      <td><span class="badge ${m.is_read ? 'badge-read' : 'badge-unread'}">${m.is_read ? 'Read' : 'Unread'}</span></td>
+      <td>${!m.is_read ? `<button class="btn-sm btn-read" onclick="markRead(${m.id})">Mark read</button>` : ''}</td>
+    </tr>`).join('');
+}
+
+async function markRead(id) {
+  await fetch(`${API}/api/admin/messages/${id}/read`, {method:'PUT', credentials:'include'});
+  loadMessages();
+  loadStats();
+}
+
+// Enter key on login
+document.getElementById('adminPass').addEventListener('keydown', e => {
+  if (e.key === 'Enter') adminLogin();
+});
+</script>
+</body>
+</html>

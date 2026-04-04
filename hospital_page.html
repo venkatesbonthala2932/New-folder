@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Aadityaa Hospital | Advanced Care, Personalized Healing</title>
+<meta name="description" content="Experience comprehensive medical excellence at Hyderabad's premier multispecialty facility. Book appointments online."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --primary:#00483c;--on-primary:#fff;
+  --primary-container:#1f6052;
+  --primary-fixed:#afefdd;--primary-fixed-dim:#94d3c1;
+  --on-primary-fixed:#00201a;--on-primary-fixed-variant:#065043;
+  --secondary:#4c616c;--on-secondary:#fff;
+  --secondary-fixed:#cfe6f2;--on-secondary-fixed-variant:#354a53;
+  --tertiary:#194543;--on-tertiary:#fff;
+  --tertiary-fixed:#beebe7;--on-tertiary-fixed-variant:#224e4b;
+  --error:#ba1a1a;--on-error:#fff;
+  --error-container:#ffdad6;--on-error-container:#93000a;
+  --surface:#f8fafb;
+  --surface-container-lowest:#fff;
+  --surface-container-low:#f2f4f5;
+  --surface-container:#eceeef;
+  --surface-container-high:#e6e8e9;
+  --surface-variant:#e1e3e4;
+  --on-surface:#191c1d;--on-surface-variant:#3f4949;
+  --outline:#6f7979;--outline-variant:#bec8c9;
+  --inverse-surface:#2e3132;--inverse-on-surface:#eff1f2;
+  --inverse-primary:#94d3c1;
+}
+body{font-family:'Inter',sans-serif;background:var(--surface);color:var(--on-surface);line-height:1.5;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;border:none;font-family:inherit;background:none}
+select,input{font-family:inherit}
+.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}
+.site-header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(190,200,201,.2)}
+.nav-inner{max-width:80rem;margin:0 auto;padding:0 1.5rem;height:80px;display:flex;align-items:center;justify-content:space-between}
+.nav-brand{display:flex;align-items:center;gap:1rem}
+.nav-logo-icon{width:40px;height:40px;background:var(--primary);color:var(--on-primary);border-radius:.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.nav-brand-text{display:flex;flex-direction:column}
+.site-name{font-family:'Manrope',sans-serif;font-weight:800;font-size:1.25rem;letter-spacing:-.025em;color:var(--primary);line-height:1.2}
+.site-location{font-size:.625rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--secondary)}
+.nav-links{display:none;align-items:center;gap:2rem}
+.nav-link{font-size:.875rem;font-weight:600;color:var(--on-surface);transition:color .2s}
+.nav-link:hover{color:var(--primary)}
+.nav-actions{display:flex;align-items:center;gap:1rem}
+.emergency-info{display:none;flex-direction:column;align-items:flex-end;margin-right:.5rem}
+.emergency-label{font-size:.625rem;font-weight:700;color:var(--error);text-transform:uppercase;letter-spacing:.05em}
+.emergency-phone{font-size:.875rem;font-weight:800;color:var(--on-surface)}
+.btn-book{background:var(--primary);color:var(--on-primary);padding:.625rem 1.5rem;border-radius:.5rem;font-size:.875rem;font-weight:700;box-shadow:0 10px 15px -3px rgba(0,72,60,.1);transition:background .2s;white-space:nowrap}
+.btn-book:hover{background:var(--primary-container)}
+.hero-section{position:relative;min-height:870px;display:flex;align-items:center;padding:2.5rem 0 5rem;overflow:hidden}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-bg img{width:100%;height:100%;object-fit:cover;opacity:.15;filter:grayscale(100%)}
+.hero-bg-overlay{position:absolute;inset:0;background:linear-gradient(to right,var(--surface),rgba(248,250,251,.8),transparent)}
+.hero-content{max-width:80rem;margin:0 auto;padding:0 1.5rem;display:grid;grid-template-columns:1fr;gap:4rem;align-items:center;position:relative;z-index:10;width:100%}
+.hero-badge{display:inline-block;padding:.25rem .75rem;background:var(--primary-fixed);color:var(--on-primary-fixed);font-size:.625rem;font-weight:900;text-transform:uppercase;letter-spacing:.15em;border-radius:.125rem;margin-bottom:1.5rem}
+.hero-title{font-family:'Manrope',sans-serif;font-size:clamp(2.5rem,6vw,4.5rem);font-weight:800;color:var(--primary);line-height:1.1;margin-bottom:2rem;letter-spacing:-.025em}
+.hero-title-accent{color:var(--secondary);font-weight:400;font-style:italic}
+.hero-desc{font-size:1.125rem;color:var(--on-surface-variant);max-width:28rem;line-height:1.75;margin-bottom:2.5rem}
+.trust-badges{display:flex;gap:2rem;align-items:center;opacity:.6}
+.trust-stat{display:flex;flex-direction:column}
+.trust-stat-number{font-weight:700;font-size:1.5rem;line-height:1.2}
+.trust-stat-label{font-size:.625rem;text-transform:uppercase;font-weight:700;letter-spacing:-.025em}
+.trust-divider{width:1px;height:2.5rem;background:rgba(190,200,201,.3);flex-shrink:0}
+.booking-widget{background:var(--surface-container-lowest);padding:2rem;border-radius:1rem;box-shadow:0 25px 50px -12px rgba(0,72,60,.05);border:1px solid rgba(190,200,201,.1)}
+.booking-widget-title{font-family:'Manrope',sans-serif;font-weight:700;font-size:1.25rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:.5rem;color:var(--on-surface)}
+.booking-widget-title .material-symbols-outlined{color:var(--primary)}
+.booking-form{display:flex;flex-direction:column;gap:1rem}
+.form-label{display:block;font-size:.6875rem;font-weight:700;color:var(--secondary);text-transform:uppercase;margin-bottom:.375rem;margin-left:.25rem}
+.form-control{width:100%;background:var(--surface-container-low);border:none;border-radius:.5rem;padding:.75rem 1rem;font-size:.875rem;color:var(--on-surface);outline:none;transition:box-shadow .2s}
+.form-control:focus{box-shadow:0 0 0 2px rgba(0,72,60,.2)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.btn-submit{width:100%;background:linear-gradient(135deg,#00483c,#1f6052);color:var(--on-primary);padding:1rem;border-radius:.5rem;font-weight:700;font-size:.875rem;margin-top:1rem;transition:opacity .2s}
+.btn-submit:hover{opacity:.9}
+.booking-note{text-align:center;font-size:.625rem;color:var(--on-surface-variant);margin-top:1rem}
+.quick-actions-section{max-width:80rem;margin:-4rem auto 0;padding:0 1.5rem;position:relative;z-index:20}
+.quick-actions-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+.quick-action-card{background:var(--surface-container-lowest);padding:1.5rem;border-radius:.75rem;border:1px solid rgba(190,200,201,.1);box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;align-items:center;gap:1rem;cursor:pointer;transition:background .2s}
+.quick-action-card:hover{background:var(--surface-container-low)}
+.quick-action-icon{width:48px;height:48px;border-radius:.5rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s,color .2s}
+.icon-green{background:var(--primary-fixed);color:var(--on-primary-fixed-variant)}
+.icon-teal{background:var(--tertiary-fixed);color:var(--on-tertiary-fixed-variant)}
+.icon-blue{background:var(--secondary-fixed);color:var(--on-secondary-fixed-variant)}
+.icon-red{background:var(--error-container);color:var(--on-error-container)}
+.quick-action-card:hover .icon-green{background:var(--primary);color:var(--on-primary)}
+.quick-action-card:hover .icon-teal{background:var(--tertiary);color:var(--on-tertiary)}
+.quick-action-card:hover .icon-blue{background:var(--secondary);color:var(--on-secondary)}
+.quick-action-card:hover .icon-red{background:var(--error);color:var(--on-error)}
+.quick-action-card h4{font-weight:700;font-size:.875rem}
+.quick-action-card p{font-size:.6875rem;color:var(--on-surface-variant);margin-top:.125rem}
+.specialties-section{padding:6rem 1.5rem;max-width:80rem;margin:0 auto}
+.section-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3rem;flex-wrap:wrap;gap:1rem}
+.section-title{font-family:'Manrope',sans-serif;font-size:1.875rem;font-weight:800;color:var(--primary);margin-bottom:1rem}
+.section-desc{color:var(--on-surface-variant);font-size:.875rem;line-height:1.75}
+.btn-text{color:var(--primary);font-weight:700;font-size:.875rem;display:flex;align-items:center;gap:.5rem;transition:gap .2s;padding:0}
+.btn-text:hover{gap:.75rem}
+.specialties-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem}
+.specialty-card{cursor:pointer}
+.specialty-card-img{aspect-ratio:1/1;background:var(--surface-container-low);border-radius:1rem;overflow:hidden;margin-bottom:1rem;position:relative}
+.specialty-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.specialty-card:hover .specialty-card-img img{transform:scale(1.1)}
+.specialty-overlay{position:absolute;inset:0;background:rgba(0,72,60,.2);opacity:0;transition:opacity .3s;display:flex;align-items:center;justify-content:center}
+.specialty-card:hover .specialty-overlay{opacity:1}
+.specialty-overlay .material-symbols-outlined{color:#fff;font-size:2.5rem;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24}
+.specialty-name{font-weight:700;text-align:center;transition:color .2s}
+.specialty-card:hover .specialty-name{color:var(--primary)}
+.doctors-section{background:var(--surface-container-low);padding:6rem 0}
+.doctors-inner{max-width:80rem;margin:0 auto;padding:0 1.5rem}
+.section-center{text-align:center;max-width:42rem;margin:0 auto 4rem}
+.section-center .section-title{margin-bottom:1rem}
+.doctors-grid{display:grid;grid-template-columns:1fr;gap:2rem}
+.doctor-card{background:var(--surface-container-lowest);border-radius:1rem;padding:2rem;padding-top:0;box-shadow:0 1px 3px rgba(0,0,0,.05);border:1px solid rgba(190,200,201,.1);position:relative;margin-top:3rem;transition:transform .3s}
+.doctor-card:hover{transform:translateY(-8px)}
+.doctor-avatar-wrap{display:flex;justify-content:center;margin-top:-3rem;margin-bottom:1.5rem}
+.doctor-avatar{width:96px;height:96px;border-radius:1rem;overflow:hidden;box-shadow:0 4px 6px rgba(0,0,0,.1),0 0 0 4px var(--surface-container-lowest)}
+.doctor-avatar img{width:100%;height:100%;object-fit:cover}
+.doctor-info{text-align:center}
+.doctor-specialty{font-size:.625rem;font-weight:800;text-transform:uppercase;letter-spacing:.15em;color:var(--secondary)}
+.doctor-name{font-family:'Manrope',sans-serif;font-weight:700;font-size:1.125rem;color:var(--on-surface);margin-top:.25rem}
+.doctor-desc{font-size:.75rem;color:var(--on-surface-variant);margin:.5rem 0 1.5rem;line-height:1.75}
+.doctor-actions{display:flex;gap:.5rem}
+.btn-outline{flex:1;border:1px solid rgba(190,200,201,.3);padding:.5rem;border-radius:.5rem;font-size:.75rem;font-weight:700;transition:background .2s}
+.btn-outline:hover{background:var(--surface-container-low)}
+.btn-primary{flex:1;background:var(--primary);color:var(--on-primary);padding:.5rem;border-radius:.5rem;font-size:.75rem;font-weight:700;transition:opacity .2s}
+.btn-primary:hover{opacity:.9}
+.why-section{padding:6rem 1.5rem;max-width:80rem;margin:0 auto;display:grid;grid-template-columns:1fr;gap:4rem;align-items:center}
+.why-eyebrow{font-size:.625rem;font-weight:800;color:var(--primary);text-transform:uppercase;letter-spacing:.3em;margin-bottom:1rem;display:block}
+.why-title{font-family:'Manrope',sans-serif;font-size:2.25rem;font-weight:800;margin-bottom:2rem;color:var(--on-surface);line-height:1.2}
+.features-list{display:flex;flex-direction:column;gap:2rem}
+.feature-item{display:flex;gap:1.5rem;align-items:flex-start}
+.feature-icon{width:48px;height:48px;border-radius:.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.feature-icon.green{background:var(--primary-fixed);color:var(--primary)}
+.feature-icon.teal{background:var(--tertiary-fixed);color:var(--tertiary)}
+.feature-icon.blue{background:var(--secondary-fixed);color:var(--secondary)}
+.feature-icon .material-symbols-outlined{font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24}
+.feature-text h4{font-weight:700;font-size:1.125rem;margin-bottom:.5rem}
+.feature-text p{font-size:.875rem;color:var(--on-surface-variant);line-height:1.75}
+.facility-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.facility-img-tall{aspect-ratio:4/5;background:var(--surface-container-high);border-radius:1.5rem;overflow:hidden}
+.facility-img-tall img{width:100%;height:100%;object-fit:cover}
+.facility-right{display:flex;flex-direction:column;gap:1rem;padding-top:3rem}
+.facility-stat{aspect-ratio:1/1;background:var(--primary);border-radius:1.5rem;padding:2rem;display:flex;flex-direction:column;justify-content:flex-end;color:var(--on-primary)}
+.facility-stat-number{font-size:3rem;font-weight:800;line-height:1;margin-bottom:.5rem}
+.facility-stat-label{font-size:.75rem;text-transform:uppercase;font-weight:700;letter-spacing:.1em;opacity:.8}
+.facility-img-square{aspect-ratio:1/1;background:var(--surface-container);border-radius:1.5rem;overflow:hidden;filter:grayscale(100%)}
+.facility-img-square img{width:100%;height:100%;object-fit:cover}
+.news-section{background:var(--surface);padding:6rem 0;border-top:1px solid rgba(190,200,201,.1)}
+.news-inner{max-width:80rem;margin:0 auto;padding:0 1.5rem}
+.news-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:3rem;flex-wrap:wrap;gap:1rem}
+.btn-light{background:var(--surface-container-high);color:var(--on-surface);padding:.5rem 1.5rem;border-radius:.5rem;font-size:.875rem;font-weight:700;transition:background .2s}
+.btn-light:hover{background:var(--surface-variant)}
+.news-grid{display:grid;grid-template-columns:1fr;gap:2rem}
+.news-card{cursor:pointer}
+.news-card-img{aspect-ratio:16/10;background:var(--surface-container-low);border-radius:1rem;overflow:hidden;margin-bottom:1.5rem}
+.news-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.news-card:hover .news-card-img img{transform:scale(1.05)}
+.news-category{font-size:.625rem;font-weight:700;text-transform:uppercase;margin-bottom:.5rem;display:block}
+.cat-cardiology{color:var(--primary)}.cat-technology{color:var(--tertiary)}.cat-wellness{color:var(--secondary)}
+.news-title{font-weight:700;font-size:1.25rem;margin-bottom:.75rem;line-height:1.4;transition:color .2s}
+.news-card:hover .news-title{color:var(--primary)}
+.news-excerpt{font-size:.875rem;color:var(--on-surface-variant);display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.contact-section{padding:6rem 1.5rem;max-width:80rem;margin:0 auto;display:grid;grid-template-columns:1fr;gap:3rem}
+.contact-title{font-family:'Manrope',sans-serif;font-size:1.875rem;font-weight:800;color:var(--primary);margin-bottom:2rem}
+.contact-details{display:flex;flex-direction:column;gap:2rem}
+.contact-item{display:flex;gap:1rem;align-items:flex-start}
+.contact-item>.material-symbols-outlined{color:var(--primary);flex-shrink:0;margin-top:.125rem}
+.contact-item-label{font-weight:700;font-size:.875rem;margin-bottom:.25rem}
+.contact-item-text{font-size:.875rem;color:var(--on-surface-variant);line-height:1.75}
+.contact-actions{margin-top:3rem}
+.btn-primary-lg{background:var(--primary);color:var(--on-primary);padding:.75rem 2rem;border-radius:.5rem;font-weight:700;font-size:.875rem;display:inline-flex;align-items:center;gap:.5rem;transition:opacity .2s;cursor:pointer}
+.btn-primary-lg:hover{opacity:.9}
+.btn-primary-lg .material-symbols-outlined{font-size:1rem}
+.map-widget{height:450px;background:var(--surface-container-high);border-radius:1.5rem;overflow:hidden;position:relative;border:1px solid rgba(190,200,201,.1)}
+.map-widget img{width:100%;height:100%;object-fit:cover}
+.map-pin-card{position:absolute;bottom:1.5rem;left:1.5rem;background:var(--surface-container-lowest);padding:1rem;border-radius:.75rem;box-shadow:0 10px 15px rgba(0,0,0,.1);border:1px solid rgba(190,200,201,.2);max-width:260px}
+.map-pin-inner{display:flex;align-items:center;gap:.75rem}
+.map-pin-icon{width:32px;height:32px;background:var(--error);color:var(--on-error);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.map-pin-icon .material-symbols-outlined{font-size:1rem;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24}
+.map-pin-name{font-weight:700;font-size:.75rem}
+.map-pin-address{font-size:.625rem;color:var(--on-surface-variant)}
+.site-footer{background:var(--inverse-surface);color:var(--inverse-on-surface);padding:5rem 0}
+.footer-inner{max-width:80rem;margin:0 auto;padding:0 1.5rem}
+.footer-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;margin-bottom:5rem}
+.footer-brand{grid-column:span 2}
+.footer-logo{display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem}
+.footer-logo-icon{width:32px;height:32px;background:var(--primary-fixed);color:var(--on-primary-fixed);border-radius:.5rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.footer-logo-icon .material-symbols-outlined{font-size:1rem;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24}
+.footer-site-name{font-family:'Manrope',sans-serif;font-weight:800;font-size:1.125rem;color:#fff}
+.footer-desc{font-size:.875rem;color:var(--outline-variant);max-width:20rem;line-height:1.75;margin-bottom:2rem}
+.footer-socials{display:flex;gap:1rem}
+.footer-social-btn{width:32px;height:32px;border-radius:50%;background:rgba(225,227,228,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s}
+.footer-social-btn:hover{background:var(--primary)}
+.footer-col-title{font-weight:700;font-size:.875rem;margin-bottom:1.5rem;text-transform:uppercase;letter-spacing:.1em;color:#fff}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:1rem}
+.footer-links a{font-size:.875rem;color:var(--outline-variant);transition:color .2s}
+.footer-links a:hover{color:var(--inverse-primary)}
+.footer-bottom{padding-top:2rem;border-top:1px solid rgba(225,227,228,.1);display:flex;flex-direction:column;align-items:center;gap:1.5rem;text-align:center}
+.footer-copyright{font-size:.6875rem;color:var(--outline-variant)}
+.footer-badges{display:flex;gap:2rem;font-size:.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em}
+@media(min-width:640px){.emergency-info{display:flex}}
+@media(min-width:768px){
+  .quick-actions-grid{grid-template-columns:repeat(4,1fr)}
+  .doctors-grid{grid-template-columns:repeat(3,1fr)}
+  .news-grid{grid-template-columns:repeat(3,1fr)}
+  .footer-grid{grid-template-columns:2fr 1fr 1fr 1fr}
+  .footer-brand{grid-column:span 1}
+  .footer-bottom{flex-direction:row;justify-content:space-between;text-align:left}
+}
+@media(min-width:1024px){
+  .nav-links{display:flex}
+  .hero-content{grid-template-columns:1fr 1fr}
+  .specialties-grid{grid-template-columns:repeat(5,1fr)}
+  .why-section{grid-template-columns:1fr 1fr}
+  .contact-section{grid-template-columns:5fr 7fr}
+}
+
+/* ── AUTH MODALS ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);z-index:200;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:16px;padding:36px 32px;width:100%;max-width:420px;box-shadow:0 32px 64px rgba(0,0,0,.18);position:relative;max-height:90vh;overflow-y:auto}
+.modal-close{position:absolute;top:16px;right:16px;background:var(--surface-container-low);border:none;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;color:var(--on-surface-variant);transition:.2s}
+.modal-close:hover{background:var(--surface-container)}
+.modal-title{font-family:'Manrope',sans-serif;font-size:1.35rem;font-weight:800;color:var(--on-surface);margin-bottom:6px}
+.modal-sub{font-size:13px;color:var(--on-surface-variant);margin-bottom:24px}
+.m-label{display:block;font-size:11px;font-weight:700;color:var(--secondary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;margin-top:14px}
+.m-input{width:100%;background:var(--surface-container-low);border:none;border-radius:8px;padding:11px 14px;font-size:13px;color:var(--on-surface);font-family:inherit;outline:none;transition:box-shadow .2s}
+.m-input:focus{box-shadow:0 0 0 2px rgba(0,72,60,.2)}
+.m-btn{width:100%;background:var(--primary);color:#fff;border-radius:8px;padding:12px;font-size:14px;font-weight:700;margin-top:18px;transition:opacity .2s;cursor:pointer;border:none;font-family:inherit}
+.m-btn:hover{opacity:.88}
+.m-btn:disabled{opacity:.5;cursor:not-allowed}
+.m-link-row{text-align:center;font-size:12px;color:var(--on-surface-variant);margin-top:14px}
+.m-link{color:var(--primary);font-weight:700;cursor:pointer}
+.m-link:hover{text-decoration:underline}
+.m-msg{font-size:12px;margin-top:10px;text-align:center;min-height:18px}
+.m-msg.success{color:var(--primary)}
+.m-msg.error{color:var(--error)}
+
+/* nav user state */
+.nav-user-area{display:flex;align-items:center;gap:10px}
+.nav-avatar{width:34px;height:34px;border-radius:50%;background:var(--primary);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;cursor:pointer}
+.nav-username{font-size:13px;font-weight:600;color:var(--on-surface)}
+.btn-nav-logout{font-size:12px;font-weight:600;color:var(--secondary);background:var(--surface-container-low);
+  border:none;padding:5px 12px;border-radius:6px;cursor:pointer;transition:.2s}
+.btn-nav-logout:hover{background:var(--surface-container)}
+
+/* my-appointments panel */
+.my-apt-card{background:var(--surface-container-low);border-radius:10px;padding:14px 16px;margin-bottom:10px;border:1px solid var(--outline-variant)}
+.my-apt-id{font-size:10px;font-weight:700;color:var(--secondary);text-transform:uppercase;letter-spacing:.08em}
+.my-apt-doc{font-weight:700;font-size:14px;margin:2px 0}
+.my-apt-row{font-size:12px;color:var(--on-surface-variant);margin-top:2px}
+.apt-status-confirmed{color:var(--primary)}
+.apt-status-cancelled{color:var(--error)}
+.apt-status-completed{color:var(--secondary)}
+.btn-cancel-apt{background:rgba(186,26,26,.08);color:var(--error);border:1px solid rgba(186,26,26,.2);
+  border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;margin-top:8px;transition:.2s}
+.btn-cancel-apt:hover{background:rgba(186,26,26,.18)}
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<header class="site-header">
+  <div class="nav-inner">
+    <div class="nav-brand">
+      <div class="nav-logo-icon">
+        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">local_hospital</span>
+      </div>
+      <div class="nav-brand-text">
+        <h1 class="site-name">Aadityaa Hospital</h1>
+        <span class="site-location">Hyderabad</span>
+      </div>
+    </div>
+    <nav class="nav-links">
+      <a href="#" class="nav-link">Doctors</a>
+      <a href="#" class="nav-link">Specialties</a>
+      <a href="#" class="nav-link">Services</a>
+      <a href="#" class="nav-link">About Us</a>
+    </nav>
+    <div class="nav-actions">
+      <div class="emergency-info">
+        <span class="emergency-label">Emergency 24/7</span>
+        <a class="emergency-phone" href="tel:8886799666">8886799666</a>
+      </div>
+      <!-- Shown when NOT logged in -->
+      <div id="navGuest" class="nav-user-area">
+        <button class="btn-book" onclick="openModal('loginModal')">Login</button>
+        <button class="btn-book" style="background:transparent;color:var(--primary);border:1.5px solid var(--primary)" onclick="openModal('registerModal')">Register</button>
+      </div>
+      <!-- Shown when logged in -->
+      <div id="navUser" class="nav-user-area" style="display:none">
+        <div class="nav-avatar" id="navAvatar" onclick="openModal('myAptModal')">V</div>
+        <span class="nav-username" id="navUsername">User</span>
+        <button class="btn-nav-logout" onclick="openModal('myAptModal')">My Appointments</button>
+        <button class="btn-nav-logout" onclick="doLogout()">Logout</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero-section">
+  <div class="hero-bg">
+    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUcHT0DUHJurcBjiqzYai7v67e03KabZS8zxli5TyGthK9eAlOxhINSuIJfe7G_FaGwt8Y_VWunTfK2HBzMZFpFg8RKcUIWO1h-Z3VZr2bK2dSOmfNNrCCDgKSnLazHMC3odUv8xt-RvxZE9wRZeh-3kr9b3958krf2KNpd1rT7RNxblODl_WsSqS26KP36X-WFUFRZEyhbYP1-dyv9FT5tYwcGqPc_rkVU822pye6uam2TOPkeApGH3FVtbXN8Ymy8-bgXso6G2MC" alt="Hospital Interior"/>
+    <div class="hero-bg-overlay"></div>
+  </div>
+  <div class="hero-content">
+    <div>
+      <span class="hero-badge">World-Class Healthcare</span>
+      <h2 class="hero-title">Advanced Care,<br/><span class="hero-title-accent">Personalized</span><br/>Healing.</h2>
+      <p class="hero-desc">Experience comprehensive medical excellence at Hyderabad's premier multispecialty facility. Guided by compassion, powered by technology.</p>
+      <div class="trust-badges">
+        <div class="trust-stat"><span class="trust-stat-number">25+</span><span class="trust-stat-label">Years of Trust</span></div>
+        <div class="trust-divider"></div>
+        <div class="trust-stat"><span class="trust-stat-number">150+</span><span class="trust-stat-label">Specialists</span></div>
+        <div class="trust-divider"></div>
+        <div class="trust-stat"><span class="trust-stat-number">NABH</span><span class="trust-stat-label">Accredited</span></div>
+      </div>
+    </div>
+    <!-- Booking Widget -->
+    <div class="booking-widget">
+      <h3 class="booking-widget-title">
+        <span class="material-symbols-outlined">calendar_month</span>
+        Quick Appointment
+      </h3>
+      <form class="booking-form" id="bookingForm">
+        <div>
+          <label class="form-label">Select Specialty</label>
+          <select class="form-control" name="specialty" id="specialty">
+            <option>Cardiology</option><option>Orthopaedics</option>
+            <option>Neurology</option><option>Paediatrics</option>
+            <option>Gynaecology</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div>
+            <label class="form-label">Preferred Date</label>
+            <input class="form-control" type="date" name="date" id="aptDate"/>
+          </div>
+          <div>
+            <label class="form-label">Preferred Time</label>
+            <select class="form-control" name="time_slot" id="timeSlot">
+              <option>Morning (10AM - 1PM)</option>
+              <option>Evening (4PM - 7PM)</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="form-label">Your Name</label>
+          <input class="form-control" type="text" name="patient_name" id="patientName" placeholder="e.g. Venkatesh Bonthala"/>
+        </div>
+        <div>
+          <label class="form-label">Mobile Number</label>
+          <input class="form-control" type="tel" name="patient_phone" id="patientPhone" placeholder="10-digit mobile number"/>
+        </div>
+        <button class="btn-submit" type="submit" id="bookBtn">Check Availability</button>
+        <p class="booking-note" id="bookingMsg">Instant confirmation will be sent to your mobile number.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- QUICK ACTIONS -->
+<section class="quick-actions-section">
+  <div class="quick-actions-grid">
+    <div class="quick-action-card">
+      <div class="quick-action-icon icon-green"><span class="material-symbols-outlined">person_search</span></div>
+      <div><h4>Find a Doctor</h4><p>Search specialists</p></div>
+    </div>
+    <div class="quick-action-card">
+      <div class="quick-action-icon icon-teal"><span class="material-symbols-outlined">lab_profile</span></div>
+      <div><h4>Lab Reports</h4><p>Download results</p></div>
+    </div>
+    <div class="quick-action-card">
+      <div class="quick-action-icon icon-blue"><span class="material-symbols-outlined">medication</span></div>
+      <div><h4>Pharmacy</h4><p>Order medicines</p></div>
+    </div>
+    <div class="quick-action-card">
+      <div class="quick-action-icon icon-red"><span class="material-symbols-outlined">cardiology</span></div>
+      <div><h4>Health Check</h4><p>Book a package</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- SPECIALTIES -->
+<section class="specialties-section">
+  <div class="section-header">
+    <div>
+      <h2 class="section-title">Our Medical Specialties</h2>
+      <p class="section-desc">Providing specialized care across various departments with the latest medical protocols and diagnostic tools.</p>
+    </div>
+    <button class="btn-text">View All Departments <span class="material-symbols-outlined">arrow_right_alt</span></button>
+  </div>
+  <div class="specialties-grid">
+    <div class="specialty-card">
+      <div class="specialty-card-img">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEe5K9IllHQ5doeYLpV_7O6ssXgqrLH-fp8wyYMrpiaG4PN0LiRxQrJZC4tzK8LlLJsiVY7bWErfHmgpi_b5YBtB-hb6LFJ59Zc1vBioAWyZxAxAspwOHdxGmXiSBR2Rie9A8RwDQMoYz4KXI8V7tIybyYx70woU8Czno7bdTNhvGUoTDm06wTspER7NT58-LzMnE0Uf_sKdfbQHv4PWBv3l406EAevgxQJWmS7VMAG9bLVInAs4OKCMEanKmkJTHTXa_6ZJYRxiI6" alt="Cardiology"/>
+        <div class="specialty-overlay"><span class="material-symbols-outlined">favorite</span></div>
+      </div>
+      <p class="specialty-name">Cardiology</p>
+    </div>
+    <div class="specialty-card">
+      <div class="specialty-card-img">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDqu_SxWi7eohfJUkbnJTdbJnHfLtbHenv2iYD01cuooOyUqcrw2eaynZKd4iFEvD31cfGWVMKbR2Hn1i-5sj97TuBGdHkHRNpm9DQG0XnR69OoZ1QAu2FP_JgFaV9bbINbq2EAcMClrWGTAs8qzWQNZ6zXJn-1K23kc7AEv5mrQSl4hBy-QFd1IQJjHq1LcUhCEMWbvE6NNhMdPYkPfTWkDIMuQRkGfdJl05yQZmuZ_-rRZIYVFN87ZGf3Ew5TwtLj_bORHWP7ZC0" alt="Orthopaedics"/>
+        <div class="specialty-overlay"><span class="material-symbols-outlined">skeleton</span></div>
+      </div>
+      <p class="specialty-name">Orthopaedics</p>
+    </div>
+    <div class="specialty-card">
+      <div class="specialty-card-img">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxh0KaYF0yDTN0wwnNszpqgSWo_MKAQakv19jqYAW_CtO6gHcMO_9cAWLGMVpdUJPVgmeJEIl84VNc-k0UqtOCf7UhBmyC0159DtV4xjxvnRElXq3V_WDHoN4OrOCEVD8NiABUqInQ7J1DQNB5dfy3ylkBI3IuJ7pWEhXwTexfmKDmNgErVWP-NOcHYKvKc31e1hf0dgAInStVuJLR-qtdqKjs7QZqCaoxLDw3ViJMSQGwhhHDPCBmoLC848Zs54ZZ07JgWCMu5zca" alt="Neurology"/>
+        <div class="specialty-overlay"><span class="material-symbols-outlined">psychology</span></div>
+      </div>
+      <p class="specialty-name">Neurology</p>
+    </div>
+    <div class="specialty-card">
+      <div class="specialty-card-img">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBT6kzA9LldwJMFhVX98xUoFpMcueRR4NH7b7JrNgyvMz3QU5mYNYRLWjTifW8y8K50X3GruyT5B0Nw_yZD3fsrAIQy8MqsoxED6Fp6cPm0HaZ9IMYmDxw3Z9YtcXt0xsFR_9SOnqxQR-DSITcB7fPhSe6Ny1L1PHukQXIQ7ah42d77mJECFHaOhAo7WATgFVrbtUZVQ6TZ327F1K7spIzIY2tX8oSXsxZCZfcj9pJ7xvWADEmAtlleOYnh3q5OHw6O0a9lsQhDUkei" alt="Paediatrics"/>
+        <div class="specialty-overlay"><span class="material-symbols-outlined">child_care</span></div>
+      </div>
+      <p class="specialty-name">Paediatrics</p>
+    </div>
+    <div class="specialty-card">
+      <div class="specialty-card-img">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDy0bYRCsvSaL11NY_AAjaq1NJNmOijcZu66OfXMIjPfz37D9bNFL8OMPCO2jc79PVxewk5zIARB4Y_PGPBNCX2sM4RYTf5WWGbRRvVDLCKQ7W5Z7RDEMKFUo6nXidSA3fjSrFF58RJV_VTjy3n2VtHYW7gYtoUm017IuOom6acyKGV9TxUm7GeIEvd79KD4-2AxE9cfYYkTb5ZUGMFOgHBkGzk6bX4pCw_Z6arWZsMnb5P5v0fQAFXocDBeUDgF6F9sA6Y0ZurlQB-" alt="Gynaecology"/>
+        <div class="specialty-overlay"><span class="material-symbols-outlined">female</span></div>
+      </div>
+      <p class="specialty-name">Gynaecology</p>
+    </div>
+  </div>
+</section>
+
+<!-- DOCTORS -->
+<section class="doctors-section">
+  <div class="doctors-inner">
+    <div class="section-center">
+      <h2 class="section-title">Meet Our Distinguished Experts</h2>
+      <p class="section-desc">Consult with top-tier physicians recognized for their expertise and patient care.</p>
+    </div>
+    <div class="doctors-grid">
+      <div class="doctor-card">
+        <div class="doctor-avatar-wrap">
+          <div class="doctor-avatar">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB63fIZNdWvjBTVdZrZyuYqVykk7RKt4MEuC3I1VsfnTOY-ZiAMj4dK_kETDpzOtV8SUK5iLY2CM4jygTSEl_97O6swwFCGAwunpFU87lWtZbGotC3ZzeQMS682mIOpj1xezakVWWDJFM04YaDcPFdRBb4WgfoENeg6Ch4WjouH541kBA8gKRshwTu7u6pH7gcbLXwsiOxvbSSooGtHdaWt9KHN7EZQps-nt-0uLrWP6YpEm-nnJl5Onp7WlfovmwkClL4PIFpo3MIb" alt="Dr. Ananya Reddy"/>
+          </div>
+        </div>
+        <div class="doctor-info">
+          <span class="doctor-specialty">Cardiologist</span>
+          <h3 class="doctor-name">Dr. Ananya Reddy</h3>
+          <p class="doctor-desc">MBBS, MD - Cardiology, 15+ Years Exp. Specialist in minimally invasive cardiac procedures.</p>
+          <div class="doctor-actions">
+            <button class="btn-outline">View Profile</button>
+            <button class="btn-primary">Book Now</button>
+          </div>
+        </div>
+      </div>
+      <div class="doctor-card">
+        <div class="doctor-avatar-wrap">
+          <div class="doctor-avatar">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuASF1i1fc8aA-YcxvX4fx-zTXLG2SHzDb7veeVFqEvhhy-POQayVEGoBiiON6TLgXU0m-3V6Ts-ol-g7MohlakLEvkwm5B6c8Y9o1pT2AlWJyb0ja0T8HNOxeDsUDk2TYPmbsNlenmHBHeIAlN3ZuMRSEcp9v_AZskGsRTstOHUjv2FhSBuNTFZ8rpz0G_23FaZ4zrJL2Bqx7ijSHS7g3RrirhtpUK22p5vd2pXPw-fFTGXrPVtEVSW5qVWgsQ02Ai9s0EPvbTdv1J2" alt="Dr. Vikram Rao"/>
+          </div>
+        </div>
+        <div class="doctor-info">
+          <span class="doctor-specialty">Orthopaedic Surgeon</span>
+          <h3 class="doctor-name">Dr. Vikram Rao</h3>
+          <p class="doctor-desc">MS Ortho, MCh (Ortho), 20+ Years Exp. Expert in robotic joint replacement surgery.</p>
+          <div class="doctor-actions">
+            <button class="btn-outline">View Profile</button>
+            <button class="btn-primary">Book Now</button>
+          </div>
+        </div>
+      </div>
+      <div class="doctor-card">
+        <div class="doctor-avatar-wrap">
+          <div class="doctor-avatar">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCb35r8S6l1bJITzgUjBdwohONu7BILq_0OPVgA-P0XRWP3OCYVhkTcjM6BEyk6DUcjYge7NAaoJJONN8yFK0Tlarp0i2ApW34dh1ZOUo4r90m6kelrppI6ljMRu3J8gQ6icW6Av7hHw3OleGUC9XCk7jSNEBUkT9M68WeeiueFg_DqVRZv1oN_ZVfGblBF5JnizAZdZWMRmyfOe2I12caI6qZY_X1CmqH6JelnYbWLVX5SdFyCLrBoFp_X-zYNBEhIPmaauSSb-2DN" alt="Dr. Sai Pallavi"/>
+          </div>
+        </div>
+        <div class="doctor-info">
+          <span class="doctor-specialty">Paediatrician</span>
+          <h3 class="doctor-name">Dr. Sai Pallavi</h3>
+          <p class="doctor-desc">MD Paediatrics, 12+ Years Exp. Dedicated to comprehensive neonatal and child development care.</p>
+          <div class="doctor-actions">
+            <button class="btn-outline">View Profile</button>
+            <button class="btn-primary">Book Now</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY CHOOSE US -->
+<section class="why-section">
+  <div>
+    <span class="why-eyebrow">Our Excellence</span>
+    <h2 class="why-title">Why Choose Aadityaa Hospital?</h2>
+    <div class="features-list">
+      <div class="feature-item">
+        <div class="feature-icon green">
+          <span class="material-symbols-outlined">medical_information</span>
+        </div>
+        <div class="feature-text">
+          <h4>Patient-Centric Philosophy</h4>
+          <p>We prioritize your comfort and understanding at every step, ensuring a transparent and empathetic healing journey.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon teal">
+          <span class="material-symbols-outlined">precision_manufacturing</span>
+        </div>
+        <div class="feature-text">
+          <h4>Cutting-Edge Technology</h4>
+          <p>From 3T MRI to Robotic Surgical systems, we house the world's most advanced medical infrastructure in Hyderabad.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon blue">
+          <span class="material-symbols-outlined">emergency</span>
+        </div>
+        <div class="feature-text">
+          <h4>24/7 Emergency Care</h4>
+          <p>Our trauma center and ambulance services are on standby 24/7, managed by expert critical care specialists.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="facility-grid">
+    <div class="facility-img-tall">
+      <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzh_Nut6a8Qk5oTzbAQ5Kd_6zFfoz4R4z2jF3GrGDMDWo93qteYWFqYX9DNdImPHyB5qiTciOe6c5VU-aeoZBBNu4LscKYqkbcOPf9CWF3l7Y7JTwpZrCrdyJwHISwkymE6PpxbSJRW1wzf7eCf0dp-8OcYMQG36938LZbdJFXvslPtR32IFNBf9xuZIBLjO6f0d5oNtXGD-WQBqLUO0w_JUXk5zIbug4CRbG8xOJ_FrrmSLyw79cHMKYm7T-FA9OCcmD4tcbU1xqC" alt="Hospital Facility"/>
+    </div>
+    <div class="facility-right">
+      <div class="facility-stat">
+        <span class="facility-stat-number">98%</span>
+        <span class="facility-stat-label">Patient Satisfaction Rate</span>
+      </div>
+      <div class="facility-img-square">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDoStfpz_Vn6StVqiF4JR4VJt2z9z6-Hjk1RdX2vIFLdDNBT0Gkast5K3bKBP_VmGq9cjrRUFlcuIMwYJEw2nH08Qx_kCNA-rYAvsZxggLRNHi_cXBx1V9BlwL05S2BySjOTxe9wDSXeAUHBdO3PVB5Cf4qGr0jSERQd5ZCkc2FSinTp5kddKBr5Sv0gjv0Op4QB7yeb7g5M5fjiH3S1hxQk4EwG1Xzi4jPMNgOg21s3tr-XJZK4pfaQ_T50kjMdm10pJbAL5prp-b0" alt="Team"/>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWS -->
+<section class="news-section">
+  <div class="news-inner">
+    <div class="news-header">
+      <h2 class="section-title" style="margin-bottom:0">Health Insights &amp; News</h2>
+      <button class="btn-light">Read All Tips</button>
+    </div>
+    <div class="news-grid">
+      <article class="news-card">
+        <div class="news-card-img">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAadInU0qRtbv4xEIh-oZ_ZUfpYTYT46ot9hM-O4OnMVIzbRHTxK9IO3zHypw5NBWx5zPqKs7I8fJx_r6PlLO_VnjRFRf_VONpx_Wvkiq8rUYtXrLOCFqKpH4zR7aYlFOQkioTHAbKO1vYcVR_iGVJs8W7MXrNepJrbTXH3ZsTao7Exeb9wIvmzOl8-jwd-_DMCBR8PD5MnqqbmZsG1YQn2ynlwc8ii6OlBgKf2Czl4I_qAdyJPEZ_RYsRoUyTO9awGrgfFWTAZSiob" alt="Heart Health"/>
+        </div>
+        <span class="news-category cat-cardiology">Cardiology</span>
+        <h3 class="news-title">5 Simple Habits to Improve Your Heart Health Daily</h3>
+        <p class="news-excerpt">Small changes in your diet and activity can lead to a longer, healthier life. Learn what our cardiologists recommend...</p>
+      </article>
+      <article class="news-card">
+        <div class="news-card-img">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXhRkBYn8AFJR0rOcZoio-fmcUzVuobY9JnB08UGRBE0EzwZnRqkRg1FpJS_fT0EqYZuUGV5IqxFKMWX-9y2czjwySprz-WsYpVixI-FKmtiTta_DpYxgS6_4jquajVNrQ5ySfdxTJ-xIIP_lvuFCJqEfp8tJImrHr62VtD3jwZx6mbpUoy8GKeczvcaoxh94Rms55q4LG0mKT0PmY-b9MWG1nnxPipZecPcBJHrbsi_Xfm893bynGx2i-zvgKVKdb-_lrrTYyG3OV" alt="Medical Tech"/>
+        </div>
+        <span class="news-category cat-technology">Technology</span>
+        <h3 class="news-title">How Robotic Surgery is Changing Patient Outcomes</h3>
+        <p class="news-excerpt">Aadityaa Hospital introduces the latest Gen-4 Da Vinci system for minimally invasive precision...</p>
+      </article>
+      <article class="news-card">
+        <div class="news-card-img">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrhnSE2qMAthel0eL0THKbIPN0Q9eknLsA8nyLWFH9EaIn2mq_AQq-2ffV2Bhx7huES8AmkNPIPmzK-ETKMPbpRpSbodev0Wg4y2gh3n0-Dkw3-Y67u-dsw8Ij3vdlWCaa9JNjVCRXnwYQ1TtwYw3t7dwVLRT6q-YuFMFlonBM0GORW1g-G_7DJrgm70cpDKV488SrBkh-D7NelmfYVvh2WK8ErjCn9kTEwyi7eE3ZwVqoAmUUqQeNsoaDnkvKzxXTEdOgsE3Eqjgt" alt="Wellness"/>
+        </div>
+        <span class="news-category cat-wellness">Wellness</span>
+        <h3 class="news-title">Understanding Mental Wellness in the Modern Era</h3>
+        <p class="news-excerpt">Our neurology department shares essential tips for maintaining cognitive health and emotional balance...</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section">
+  <div>
+    <h2 class="contact-title">Reach Out to Us</h2>
+    <div class="contact-details">
+      <div class="contact-item">
+        <span class="material-symbols-outlined">location_on</span>
+        <div>
+          <p class="contact-item-label">Our Address</p>
+          <p class="contact-item-text">PI/466, 8, ZP Rd, Phase 4, Teachers Colony, Hastinapuram, Hyderabad, Telangana 500070</p>
+        </div>
+      </div>
+      <div class="contact-item">
+        <span class="material-symbols-outlined">schedule</span>
+        <div>
+          <p class="contact-item-label">Working Hours</p>
+          <p class="contact-item-text">Mon-Sat: 10AM - 6PM<br/>Sun: Closed (Emergency Open 24/7)</p>
+        </div>
+      </div>
+      <div class="contact-item">
+        <span class="material-symbols-outlined">call</span>
+        <div>
+          <p class="contact-item-label">Contact Details</p>
+          <p class="contact-item-text">Main Desk: +91 40-XXXX-XXXX<br/>Emergency: +91 99XXXX-XXXX</p>
+        </div>
+      </div>
+    </div>
+    <div class="contact-actions">
+      <button class="btn-primary-lg">
+        <span class="material-symbols-outlined">directions</span> Get Directions
+      </button>
+    </div>
+  </div>
+  <div class="map-widget">
+    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBISgx1bZyc6Kq8rrEOoKytdQvjy4hCeckYMmfmQCaJU4vPZZWVcbFEBfC5sDRkJHQp61g887qZzW_RFSVg1pylRd49vu611Bn8R2mux4594BlE1TZlVQ7iL-sqdWfhr2L8ztU_smNgljNVXGpo_gXuGJXyDa2xWDB91k70ipmfmeScrHtKvPQFgc87eXoHoOAAQR_5cDd4l-oN8jyiXROEDcmNxAsIGlVVSR6kj8uGZSQ3Umv7xeDGk9J3ZJBny7fq3Q4LcW5prcPK" alt="Map Location"/>
+    <div class="map-pin-card">
+      <div class="map-pin-inner">
+        <div class="map-pin-icon"><span class="material-symbols-outlined">location_on</span></div>
+        <div>
+          <p class="map-pin-name">Aadityaa Hospital</p>
+          <p class="map-pin-address">Hastinapuram, Hyderabad</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="footer-logo-icon"><span class="material-symbols-outlined">local_hospital</span></div>
+          <h2 class="footer-site-name">Aadityaa Hospital</h2>
+        </div>
+        <p class="footer-desc">Redefining healthcare excellence in Hyderabad through advanced clinical expertise and compassionate patient care.</p>
+        <div class="footer-socials">
+          <div class="footer-social-btn"><span class="material-symbols-outlined">share</span></div>
+          <div class="footer-social-btn"><span class="material-symbols-outlined">camera</span></div>
+          <div class="footer-social-btn"><span class="material-symbols-outlined">video_library</span></div>
+        </div>
+      </div>
+      <div>
+        <h4 class="footer-col-title">Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="#">About Aadityaa</a></li>
+          <li><a href="#">Medical Team</a></li>
+          <li><a href="#">Career Opportunities</a></li>
+          <li><a href="#">Patient Stories</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="footer-col-title">Departments</h4>
+        <ul class="footer-links">
+          <li><a href="#">Heart Center</a></li>
+          <li><a href="#">Neuro Sciences</a></li>
+          <li><a href="#">Women's Health</a></li>
+          <li><a href="#">Child Care</a></li>
+          <li><a href="#">Orthopaedics</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="footer-col-title">Support</h4>
+        <ul class="footer-links">
+          <li><a href="#">Patient Portal</a></li>
+          <li><a href="#">Insurance Partners</a></li>
+          <li><a href="#">Health Packages</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Use</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copyright">© 2024 Aadityaa Hospital. NABH Accredited Multispeciality Facility. All Rights Reserved.</p>
+      <div class="footer-badges">
+        <span>NABH</span><span>JCI Accredited</span><span>ISO 9001:2015</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ── LOGIN MODAL ── -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
+    <h2 class="modal-title">Welcome Back 👋</h2>
+    <p class="modal-sub">Log in to book your appointment</p>
+    <label class="m-label">Email Address</label>
+    <input class="m-input" id="li-email" type="email" placeholder="yourname@email.com"/>
+    <label class="m-label">Password</label>
+    <input class="m-input" id="li-pass" type="password" placeholder="••••••••"/>
+    <button class="m-btn" id="li-btn" onclick="doLogin()">Login</button>
+    <p class="m-msg" id="li-msg"></p>
+    <p class="m-link-row">New patient? <span class="m-link" onclick="switchModal('loginModal','registerModal')">Create account</span></p>
+  </div>
+</div>
+
+<!-- ── REGISTER MODAL ── -->
+<div class="modal-overlay" id="registerModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('registerModal')">✕</button>
+    <h2 class="modal-title">Create Account</h2>
+    <p class="modal-sub">Register as a new patient at Aadityaa Hospital</p>
+    <label class="m-label">Full Name</label>
+    <input class="m-input" id="rg-name" type="text" placeholder="e.g. Venkatesh Bonthala"/>
+    <label class="m-label">Email Address</label>
+    <input class="m-input" id="rg-email" type="email" placeholder="yourname@email.com"/>
+    <label class="m-label">Mobile Number</label>
+    <input class="m-input" id="rg-phone" type="tel" placeholder="10-digit mobile number"/>
+    <label class="m-label">Password <span style="font-size:10px;font-weight:400">(min 6 characters)</span></label>
+    <input class="m-input" id="rg-pass" type="password" placeholder="Create a strong password"/>
+    <button class="m-btn" id="rg-btn" onclick="doRegister()">Create Account</button>
+    <p class="m-msg" id="rg-msg"></p>
+    <p class="m-link-row">Already registered? <span class="m-link" onclick="switchModal('registerModal','loginModal')">Login here</span></p>
+  </div>
+</div>
+
+<!-- ── MY APPOINTMENTS MODAL ── -->
+<div class="modal-overlay" id="myAptModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('myAptModal')">✕</button>
+    <h2 class="modal-title">My Appointments</h2>
+    <p class="modal-sub" id="myAptSub">Loading your appointments...</p>
+    <!-- Phone change section -->
+    <details style="margin-bottom:16px;border:1px solid var(--outline-variant);border-radius:8px;padding:12px">
+      <summary style="font-size:12px;font-weight:700;color:var(--secondary);cursor:pointer">🔒 Change Phone Number (requires password)</summary>
+      <label class="m-label">New Mobile Number</label>
+      <input class="m-input" id="ph-new" type="tel" placeholder="New 10-digit number"/>
+      <label class="m-label">Current Password (security verification)</label>
+      <input class="m-input" id="ph-pass" type="password" placeholder="Your current password"/>
+      <button class="m-btn" style="margin-top:10px" onclick="doChangePhone()">Update Phone</button>
+      <p class="m-msg" id="ph-msg"></p>
+    </details>
+    <div id="aptList"><p style="color:var(--on-surface-variant);font-size:13px">Loading...</p></div>
+  </div>
+</div>
+
+<script>
+const API = 'http://localhost:5000';
+let currentUser = null;
+
+// ── Modal helpers ──────────────────────────────────────────
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+  if (id === 'myAptModal') loadMyAppointments();
+}
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function switchModal(from, to) { closeModal(from); openModal(to); }
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
+});
+
+// ── Check session on page load ─────────────────────────────
+async function checkSession() {
+  try {
+    const res  = await fetch(`${API}/api/me`, {credentials:'include'});
+    const data = await res.json();
+    if (data.success) setLoggedIn(data.user);
+  } catch(e) {}
+}
+
+function setLoggedIn(user) {
+  currentUser = user;
+  document.getElementById('navGuest').style.display = 'none';
+  document.getElementById('navUser').style.display  = 'flex';
+  document.getElementById('navUsername').textContent = user.name.split(' ')[0];
+  document.getElementById('navAvatar').textContent   = user.name[0].toUpperCase();
+  document.getElementById('patientName').value  = user.name;
+  document.getElementById('patientPhone').value = user.phone;
+}
+
+function setLoggedOut() {
+  currentUser = null;
+  document.getElementById('navGuest').style.display = 'flex';
+  document.getElementById('navUser').style.display  = 'none';
+  document.getElementById('patientName').value  = '';
+  document.getElementById('patientPhone').value = '';
+}
+
+// ── Login ──────────────────────────────────────────────────
+async function doLogin() {
+  const btn = document.getElementById('li-btn');
+  const msg = document.getElementById('li-msg');
+  btn.disabled = true; btn.textContent = 'Logging in...';
+  msg.className = 'm-msg'; msg.textContent = '';
+
+  const res  = await fetch(`${API}/api/login`, {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      email:    document.getElementById('li-email').value.trim(),
+      password: document.getElementById('li-pass').value
+    })
+  }).catch(() => null);
+
+  btn.disabled = false; btn.textContent = 'Login';
+
+  if (!res) { showMsg('li-msg','error','❌ Cannot reach server. Is Flask running?'); return; }
+  const data = await res.json();
+  if (data.success) {
+    setLoggedIn(data.user);
+    closeModal('loginModal');
+    showMsg('li-msg','',''); // clear
+  } else {
+    showMsg('li-msg','error','❌ ' + data.message);
+  }
+}
+
+// ── Register ───────────────────────────────────────────────
+async function doRegister() {
+  const btn = document.getElementById('rg-btn');
+  btn.disabled = true; btn.textContent = 'Creating account...';
+
+  const res = await fetch(`${API}/api/register`, {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      name:     document.getElementById('rg-name').value.trim(),
+      email:    document.getElementById('rg-email').value.trim(),
+      phone:    document.getElementById('rg-phone').value.trim(),
+      password: document.getElementById('rg-pass').value
+    })
+  }).catch(() => null);
+
+  btn.disabled = false; btn.textContent = 'Create Account';
+
+  if (!res) { showMsg('rg-msg','error','❌ Cannot reach server.'); return; }
+  const data = await res.json();
+  if (data.success) {
+    setLoggedIn(data.user);
+    closeModal('registerModal');
+  } else {
+    showMsg('rg-msg','error','❌ ' + data.message);
+  }
+}
+
+// ── Logout ─────────────────────────────────────────────────
+async function doLogout() {
+  await fetch(`${API}/api/logout`, {method:'POST', credentials:'include'}).catch(()=>{});
+  setLoggedOut();
+}
+
+// ── My Appointments ────────────────────────────────────────
+async function loadMyAppointments() {
+  const list = document.getElementById('aptList');
+  const sub  = document.getElementById('myAptSub');
+  list.innerHTML = '<p style="color:var(--on-surface-variant);font-size:13px">Loading...</p>';
+
+  const res  = await fetch(`${API}/api/my-appointments`, {credentials:'include'}).catch(()=>null);
+  if (!res) { list.innerHTML = '<p style="color:var(--error);font-size:13px">Could not load appointments.</p>'; return; }
+  const data = await res.json();
+
+  if (!data.success) { list.innerHTML = '<p style="color:var(--error);font-size:13px">Please log in first.</p>'; return; }
+  sub.textContent = currentUser ? `Logged in as ${currentUser.name} (${currentUser.phone})` : '';
+
+  if (!data.appointments.length) {
+    list.innerHTML = '<p style="color:var(--on-surface-variant);font-size:13px;text-align:center;padding:24px">No appointments yet. Book one below!</p>';
+    return;
+  }
+  list.innerHTML = data.appointments.map(a => `
+    <div class="my-apt-card">
+      <div class="my-apt-id">${a.appointment_id}</div>
+      <div class="my-apt-doc">${a.doctor}</div>
+      <div class="my-apt-row">🏥 ${a.specialty} &nbsp;|&nbsp; 📅 ${a.date} &nbsp;|&nbsp; ⏰ ${a.time_slot}</div>
+      <div class="my-apt-row apt-status-${a.status.toLowerCase()}">● ${a.status}</div>
+      ${a.status === 'Confirmed' ? `<button class="btn-cancel-apt" onclick="cancelApt('${a.appointment_id}')">Cancel Appointment</button>` : ''}
+    </div>`).join('');
+}
+
+async function cancelApt(id) {
+  if (!confirm(`Cancel appointment ${id}?`)) return;
+  const res  = await fetch(`${API}/api/appointments/${id}`, {method:'DELETE', credentials:'include'});
+  const data = await res.json();
+  if (data.success) loadMyAppointments();
+  else alert('Error: ' + data.message);
+}
+
+// ── Change Phone ───────────────────────────────────────────
+async function doChangePhone() {
+  const newPhone = document.getElementById('ph-new').value.trim();
+  const password = document.getElementById('ph-pass').value;
+  const msg      = document.getElementById('ph-msg');
+
+  const res = await fetch(`${API}/api/me/phone`, {
+    method:'PUT', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({new_phone: newPhone, current_password: password})
+  }).catch(() => null);
+
+  if (!res) { showMsg('ph-msg','error','❌ Server error.'); return; }
+  const data = await res.json();
+  if (data.success) {
+    currentUser = data.user;
+    showMsg('ph-msg','success','✅ ' + data.message);
+    document.getElementById('patientPhone').value = data.user.phone;
+  } else {
+    showMsg('ph-msg','error','❌ ' + data.message);
+  }
+}
+
+// ── Booking Form ───────────────────────────────────────────
+document.getElementById('bookingForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn   = document.getElementById('bookBtn');
+  const msgEl = document.getElementById('bookingMsg');
+
+  // Must be logged in to book
+  if (!currentUser) {
+    msgEl.style.color = 'var(--error)';
+    msgEl.textContent = '❌ Please login first to book an appointment.';
+    setTimeout(() => openModal('loginModal'), 800);
+    return;
+  }
+
+  btn.textContent = 'Booking...'; btn.disabled = true;
+  msgEl.style.color   = 'var(--secondary)';
+  msgEl.textContent   = 'Please wait...';
+
+  const res = await fetch(`${API}/api/book`, {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      specialty: document.getElementById('specialty').value,
+      date:      document.getElementById('aptDate').value,
+      time_slot: document.getElementById('timeSlot').value,
+      notes:     ''
+    })
+  }).catch(() => null);
+
+  btn.textContent = 'Check Availability'; btn.disabled = false;
+
+  if (!res) { msgEl.style.color='var(--error)'; msgEl.textContent='❌ Server not reachable.'; return; }
+  const data = await res.json();
+  if (data.success) {
+    msgEl.style.color = '#00483c';
+    msgEl.textContent = '✅ ' + data.message;
+    document.getElementById('bookingForm').reset();
+  } else {
+    msgEl.style.color = 'var(--error)';
+    msgEl.textContent = '❌ ' + data.message;
+  }
+});
+
+// ── Utility ────────────────────────────────────────────────
+function showMsg(id, type, text) {
+  const el = document.getElementById(id);
+  el.className = 'm-msg' + (type ? ' ' + type : '');
+  el.textContent = text;
+}
+
+// Enter key shortcuts
+document.getElementById('li-pass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+document.getElementById('rg-pass').addEventListener('keydown', e => { if(e.key==='Enter') doRegister(); });
+
+// Run on page load
+checkSession();
+</script>
+</body>
+</html>
