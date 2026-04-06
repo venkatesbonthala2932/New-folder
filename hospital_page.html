@@ -270,7 +270,7 @@ select,input{font-family:inherit}
 <!-- NAVIGATION -->
 <header class="site-header">
   <div class="nav-inner">
-    <div class="nav-brand">
+    <a href="/" class="nav-brand" style="text-decoration:none">
       <div class="nav-logo-icon">
         <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">local_hospital</span>
       </div>
@@ -278,7 +278,7 @@ select,input{font-family:inherit}
         <h1 class="site-name">Aadityaa Hospital</h1>
         <span class="site-location">Hyderabad</span>
       </div>
-    </div>
+    </a>
     <nav class="nav-links">
       <a href="#" class="nav-link">Doctors</a>
       <a href="#" class="nav-link">Specialties</a>
@@ -371,19 +371,20 @@ select,input{font-family:inherit}
 <!-- QUICK ACTIONS -->
 <section class="quick-actions-section">
   <div class="quick-actions-grid">
-    <div class="quick-action-card">
+    <div class="quick-action-card" onclick="openModal('doctorModal')" style="cursor:pointer">
       <div class="quick-action-icon icon-green"><span class="material-symbols-outlined">person_search</span></div>
       <div><h4>Find a Doctor</h4><p>Search specialists</p></div>
     </div>
-    <div class="quick-action-card">
+    <div class="quick-action-card" onclick="openModal('labModal')" style="cursor:pointer">
       <div class="quick-action-icon icon-teal"><span class="material-symbols-outlined">lab_profile</span></div>
       <div><h4>Lab Reports</h4><p>Download results</p></div>
     </div>
-    <div class="quick-action-card">
+    <div class="quick-action-card" onclick="window.open('https://www.netmeds.com','_blank')" style="cursor:pointer;position:relative">
       <div class="quick-action-icon icon-blue"><span class="material-symbols-outlined">medication</span></div>
       <div><h4>Pharmacy</h4><p>Order medicines</p></div>
+      <span style="position:absolute;top:8px;right:8px;font-size:.55rem;font-weight:700;background:#cfe6f2;color:#354a53;padding:2px 6px;border-radius:4px;text-transform:uppercase;letter-spacing:.05em">Sponsored</span>
     </div>
-    <div class="quick-action-card">
+    <div class="quick-action-card" onclick="openModal('healthPkgModal')" style="cursor:pointer">
       <div class="quick-action-icon icon-red"><span class="material-symbols-outlined">cardiology</span></div>
       <div><h4>Health Check</h4><p>Book a package</p></div>
     </div>
@@ -554,7 +555,7 @@ select,input{font-family:inherit}
   <div class="news-inner">
     <div class="news-header">
       <h2 class="section-title" style="margin-bottom:0">Health Insights &amp; News</h2>
-      <button class="btn-light">Read All Tips</button>
+      <a href="/health_tips.html" class="btn-light">Read All Tips</a>
     </div>
     <div class="news-grid">
       <article class="news-card">
@@ -563,7 +564,11 @@ select,input{font-family:inherit}
         </div>
         <span class="news-category cat-cardiology">Cardiology</span>
         <h3 class="news-title">5 Simple Habits to Improve Your Heart Health Daily</h3>
-        <p class="news-excerpt">Small changes in your diet and activity can lead to a longer, healthier life. Learn what our cardiologists recommend...</p>
+        <p class="news-excerpt">Small changes in your diet and activity can lead to a longer, healthier life. Our cardiologists recommend daily walking, reducing salt intake, and monitoring blood pressure regularly...</p>
+        <div style="display:flex;align-items:center;gap:.75rem;margin-top:1rem;font-size:.7rem;color:var(--on-surface-variant)">
+          <span style="display:flex;align-items:center;gap:.3rem"><span class="material-symbols-outlined" style="font-size:.9rem">person</span>Dr. Ananya Reddy</span>
+          <span>·</span><span>4 min read</span><span>·</span><span>March 2026</span>
+        </div>
       </article>
       <article class="news-card">
         <div class="news-card-img">
@@ -571,7 +576,11 @@ select,input{font-family:inherit}
         </div>
         <span class="news-category cat-technology">Technology</span>
         <h3 class="news-title">How Robotic Surgery is Changing Patient Outcomes</h3>
-        <p class="news-excerpt">Aadityaa Hospital introduces the latest Gen-4 Da Vinci system for minimally invasive precision...</p>
+        <p class="news-excerpt">Aadityaa Hospital now offers the Gen-4 Da Vinci robotic system — enabling surgeons to perform complex procedures with microscopic precision, smaller incisions and faster recovery times...</p>
+        <div style="display:flex;align-items:center;gap:.75rem;margin-top:1rem;font-size:.7rem;color:var(--on-surface-variant)">
+          <span style="display:flex;align-items:center;gap:.3rem"><span class="material-symbols-outlined" style="font-size:.9rem">person</span>Dr. Vikram Rao</span>
+          <span>·</span><span>5 min read</span><span>·</span><span>April 2026</span>
+        </div>
       </article>
       <article class="news-card">
         <div class="news-card-img">
@@ -579,7 +588,11 @@ select,input{font-family:inherit}
         </div>
         <span class="news-category cat-wellness">Wellness</span>
         <h3 class="news-title">Understanding Mental Wellness in the Modern Era</h3>
-        <p class="news-excerpt">Our neurology department shares essential tips for maintaining cognitive health and emotional balance...</p>
+        <p class="news-excerpt">Stress, poor sleep, and social isolation are silently affecting millions. Our neurology and psychiatry team shares proven strategies — from mindfulness to therapy — for maintaining mental balance...</p>
+        <div style="display:flex;align-items:center;gap:.75rem;margin-top:1rem;font-size:.7rem;color:var(--on-surface-variant)">
+          <span style="display:flex;align-items:center;gap:.3rem"><span class="material-symbols-outlined" style="font-size:.9rem">person</span>Dr. Ravi Kumar</span>
+          <span>·</span><span>6 min read</span><span>·</span><span>April 2026</span>
+        </div>
       </article>
     </div>
   </div>
@@ -966,6 +979,314 @@ document.getElementById('rg-pass').addEventListener('keydown', e => { if(e.key==
 
 // Run on page load
 checkSession();
+</script>
+<!-- ── DOCTOR FINDER MODAL ── -->
+<div class="modal-overlay" id="doctorModal">
+  <div class="modal-box" style="max-width:860px;width:95vw">
+    <button class="modal-close" onclick="closeModal('doctorModal')">✕</button>
+    <h2 class="modal-title">Find a Doctor</h2>
+    <p class="modal-sub">Filter by department · Sorted alphabetically</p>
+    <!-- Dept Tabs -->
+    <div id="deptTabs" style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.5rem"></div>
+    <!-- Admin bar -->
+    <div id="adminDoctorBar" style="display:none;margin-bottom:1rem;padding:.75rem 1rem;background:var(--primary-fixed);border-radius:.5rem;display:flex;align-items:center;justify-content:space-between">
+      <span style="font-size:.8rem;font-weight:700;color:var(--on-primary-fixed)">🔧 Admin Mode</span>
+      <button onclick="openModal('addDoctorModal')" style="background:var(--primary);color:#fff;padding:.4rem 1rem;border-radius:.4rem;font-size:.75rem;font-weight:700">+ Add Doctor</button>
+    </div>
+    <div id="doctorGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1.25rem;max-height:60vh;overflow-y:auto;padding-right:.25rem"></div>
+  </div>
+</div>
+
+<!-- ── ADD DOCTOR MODAL (Admin) ── -->
+<div class="modal-overlay" id="addDoctorModal">
+  <div class="modal-box" style="max-width:480px">
+    <button class="modal-close" onclick="closeModal('addDoctorModal')">✕</button>
+    <h2 class="modal-title">Add New Doctor</h2>
+    <p class="modal-sub">Data will POST to <code>/api/admin/doctors</code></p>
+    <label class="m-label">Full Name</label>
+    <input class="m-input" id="ad-name" placeholder="Dr. Full Name"/>
+    <label class="m-label">Department</label>
+    <select class="m-input" id="ad-dept">
+      <option>Cardiology</option><option>Neurology</option><option>Orthopedics</option>
+      <option>Pediatrics</option><option>Gynecology</option><option>Dermatology</option>
+    </select>
+    <label class="m-label">Qualification</label>
+    <input class="m-input" id="ad-qual" placeholder="MBBS, MD ..."/>
+    <label class="m-label">Experience</label>
+    <input class="m-input" id="ad-exp" placeholder="e.g. 12+ Years"/>
+    <label class="m-label">Visiting Timings</label>
+    <input class="m-input" id="ad-timing" placeholder="e.g. Mon–Fri, 10AM–1PM"/>
+    <label class="m-label">Consultation Fee (₹)</label>
+    <input class="m-input" id="ad-fee" type="number" placeholder="e.g. 800"/>
+    <button class="m-btn" onclick="adminAddDoctor()">Save Doctor</button>
+    <p class="m-msg" id="ad-msg"></p>
+  </div>
+</div>
+
+<!-- ── LAB REPORTS MODAL ── -->
+<div class="modal-overlay" id="labModal">
+  <div class="modal-box" style="max-width:640px;width:95vw">
+    <button class="modal-close" onclick="closeModal('labModal')">✕</button>
+    <h2 class="modal-title">Lab Reports</h2>
+    <p class="modal-sub">Showing latest reports · sorted by date</p>
+    <div id="labReportsList" style="display:flex;flex-direction:column;gap:.75rem;max-height:65vh;overflow-y:auto;padding-right:.25rem"></div>
+  </div>
+</div>
+
+<!-- ── HEALTH PACKAGES MODAL ── -->
+<div class="modal-overlay" id="healthPkgModal">
+  <div class="modal-box" style="max-width:860px;width:95vw">
+    <button class="modal-close" onclick="closeModal('healthPkgModal')">✕</button>
+    <h2 class="modal-title">Health Check Packages</h2>
+    <p class="modal-sub">Comprehensive wellness screenings — early detection saves lives</p>
+    <div id="pkgGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.25rem;margin-top:1.25rem;max-height:72vh;overflow-y:auto;padding-right:.25rem"></div>
+  </div>
+</div>
+
+<style>
+/* ── DOCTOR CARDS ── */
+.doc-card{background:var(--surface-container-lowest);border:1px solid rgba(190,200,201,.15);border-radius:1rem;padding:1.25rem;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.04);transition:transform .25s,box-shadow .25s;position:relative}
+.doc-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,72,60,.1)}
+.doc-avt{width:72px;height:72px;border-radius:50%;overflow:hidden;margin:0 auto .75rem;border:3px solid var(--primary-fixed)}
+.doc-avt img{width:100%;height:100%;object-fit:cover}
+.doc-dept{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--secondary);margin-bottom:.2rem}
+.doc-name{font-family:'Manrope',sans-serif;font-weight:700;font-size:.95rem;color:var(--on-surface)}
+.doc-qual{font-size:.7rem;color:var(--on-surface-variant);margin:.3rem 0 .6rem;line-height:1.5}
+.doc-meta{display:flex;flex-direction:column;gap:.35rem;font-size:.72rem;text-align:left;background:var(--surface-container-low);border-radius:.6rem;padding:.65rem .75rem;margin-bottom:.85rem}
+.doc-meta-row{display:flex;align-items:center;gap:.4rem;color:var(--on-surface-variant)}
+.doc-meta-row .material-symbols-outlined{font-size:.9rem;color:var(--primary)}
+.doc-avail{display:inline-block;padding:.15rem .55rem;border-radius:2rem;font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.avail-yes{background:#d4edda;color:#155724}
+.avail-busy{background:#fff3cd;color:#856404}
+.doc-stars{color:#f59e0b;font-size:.75rem;letter-spacing:1px}
+.dept-tab{padding:.4rem 1rem;border-radius:2rem;font-size:.8rem;font-weight:700;border:1.5px solid var(--outline-variant);color:var(--on-surface-variant);background:transparent;cursor:pointer;transition:all .2s;white-space:nowrap}
+.dept-tab.active,.dept-tab:hover{background:var(--primary);color:#fff;border-color:var(--primary)}
+.btn-del-doc{position:absolute;top:.6rem;right:.6rem;width:26px;height:26px;border-radius:50%;background:var(--error-container);color:var(--on-error-container);font-size:.8rem;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;transition:.2s;display:none}
+.admin-mode .btn-del-doc{display:flex}
+/* ── LAB REPORT ROWS ── */
+.lab-row{display:flex;align-items:center;gap:1rem;padding:.9rem 1rem;background:var(--surface-container-low);border-radius:.75rem;border:1px solid rgba(190,200,201,.1)}
+.lab-icon{width:40px;height:40px;border-radius:.5rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.lab-icon .material-symbols-outlined{font-variation-settings:'FILL' 1}
+.lab-type{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--secondary)}
+.lab-title{font-weight:700;font-size:.875rem;color:var(--on-surface);margin:.1rem 0}
+.lab-date{font-size:.7rem;color:var(--on-surface-variant)}
+.lab-actions{margin-left:auto;display:flex;gap:.5rem;flex-shrink:0}
+.lab-btn{padding:.35rem .75rem;border-radius:.4rem;font-size:.72rem;font-weight:700;cursor:pointer;border:none;font-family:inherit;transition:.2s}
+.lab-btn-view{background:var(--primary-fixed);color:var(--on-primary-fixed)}
+.lab-btn-view:hover{background:var(--primary);color:#fff}
+.lab-btn-dl{background:var(--surface-container);color:var(--on-surface)}
+.lab-btn-dl:hover{background:var(--surface-variant)}
+/* ── PACKAGE CARDS ── */
+.pkg-card{background:var(--surface-container-lowest);border:1.5px solid rgba(190,200,201,.15);border-radius:1rem;padding:1.5rem;position:relative;transition:box-shadow .25s}
+.pkg-card:hover{box-shadow:0 8px 24px rgba(0,72,60,.1)}
+.pkg-card.popular{border-color:var(--primary)}
+.pkg-popular-badge{position:absolute;top:-1px;right:1.25rem;background:var(--primary);color:#fff;font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;padding:.2rem .65rem;border-radius:0 0 .4rem .4rem}
+.pkg-name{font-family:'Manrope',sans-serif;font-weight:800;font-size:1rem;color:var(--on-surface);margin-bottom:.5rem}
+.pkg-price{font-size:1.5rem;font-weight:800;color:var(--primary);line-height:1}
+.pkg-orig{font-size:.8rem;color:var(--on-surface-variant);text-decoration:line-through;margin-left:.4rem}
+.pkg-save{font-size:.7rem;font-weight:700;color:#155724;background:#d4edda;padding:.1rem .45rem;border-radius:.25rem;margin-left:.4rem}
+.pkg-duration{font-size:.72rem;color:var(--on-surface-variant);margin:.4rem 0 .75rem}
+.pkg-toggle{width:100%;text-align:left;font-size:.78rem;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:.4rem;padding:.4rem 0;cursor:pointer}
+.pkg-tests{display:none;flex-direction:column;gap:.35rem;margin-top:.5rem;margin-bottom:.75rem}
+.pkg-tests.open{display:flex}
+.pkg-test-item{display:flex;align-items:center;gap:.5rem;font-size:.75rem;color:var(--on-surface-variant)}
+.pkg-test-item::before{content:"✓";color:var(--primary);font-weight:700;flex-shrink:0}
+.pkg-book-btn{width:100%;background:var(--primary);color:#fff;padding:.6rem;border-radius:.5rem;font-size:.8rem;font-weight:700;cursor:pointer;border:none;font-family:inherit;transition:opacity .2s;margin-top:.5rem}
+.pkg-book-btn:hover{opacity:.88}
+.pkg-edit-btn{position:absolute;top:.75rem;right:.75rem;width:28px;height:28px;border-radius:50%;background:var(--surface-container);color:var(--on-surface-variant);font-size:.8rem;display:none;align-items:center;justify-content:center;cursor:pointer;border:none}
+.admin-mode .pkg-edit-btn{display:flex}
+</style>
+
+<script>
+// ── SAMPLE DATA (mirrors Flask models — swap fetch() calls to wire backend) ──
+
+const DOCTORS_DATA = [
+  {id:1,name:'Dr. Ananya Reddy',dept:'Cardiology',qual:'MBBS, MD Cardiology, DM',exp:'15+ Years',fee:800,timing:'Mon–Fri · 10AM–1PM & 4PM–7PM',available:true,rating:4.9,img:'https://lh3.googleusercontent.com/aida-public/AB6AXuB63fIZNdWvjBTVdZrZyuYqVykk7RKt4MEuC3I1VsfnTOY-ZiAMj4dK_kETDpzOtV8SUK5iLY2CM4jygTSEl_97O6swwFCGAwunpFU87lWtZbGotC3ZzeQMS682mIOpj1xezakVWWDJFM04YaDcPFdRBb4WgfoENeg6Ch4WjouH541kBA8gKRshwTu7u6pH7gcbLXwsiOxvbSSooGtHdaWt9KHN7EZQps-nt-0uLrWP6YpEm-nnJl5Onp7WlfovmwkClL4PIFpo3MIb'},
+  {id:2,name:'Dr. Vikram Rao',dept:'Orthopedics',qual:'MS Ortho, MCh (Ortho)',exp:'20+ Years',fee:1000,timing:'Mon, Wed, Fri · 10AM–1PM',available:true,rating:4.8,img:'https://lh3.googleusercontent.com/aida-public/AB6AXuASF1i1fc8aA-YcxvX4fx-zTXLG2SHzDb7veeVFqEvhhy-POQayVEGoBiiON6TLgXU0m-3V6Ts-ol-g7MohlakLEvkwm5B6c8Y9o1pT2AlWJyb0ja0T8HNOxeDsUDk2TYPmbsNlenmHBHeIAlN3ZuMRSEcp9v_AZskGsRTstOHUjv2FhSBuNTFZ8rpz0G_23FaZ4zrJL2Bqx7ijSHS7g3RrirhtpUK22p5vd2pXPw-fFTGXrPVtEVSW5qVWgsQ02Ai9s0EPvbTdv1J2'},
+  {id:3,name:'Dr. Sai Pallavi',dept:'Pediatrics',qual:'MBBS, MD Paediatrics',exp:'12+ Years',fee:600,timing:'Mon–Sat · 10AM–7PM',available:true,rating:4.9,img:'https://lh3.googleusercontent.com/aida-public/AB6AXuCb35r8S6l1bJITzgUjBdwohONu7BILq_0OPVgA-P0XRWP3OCYVhkTcjM6BEyk6DUcjYge7NAaoJJONN8yFK0Tlarp0i2ApW34dh1ZOUo4r90m6kelrppI6ljMRu3J8gQ6icW6Av7hHw3OleGUC9XCk7jSNEBUkT9M68WeeiueFg_DqVRZv1oN_ZVfGblBF5JnizAZdZWMRmyfOe2I12caI6qZY_X1CmqH6JelnYbWLVX5SdFyCLrBoFp_X-zYNBEhIPmaauSSb-2DN'},
+  {id:4,name:'Dr. Ravi Kumar',dept:'Neurology',qual:'MBBS, MD, DM Neurology',exp:'18+ Years',fee:1200,timing:'Tue, Wed, Thu · 10AM–1PM',available:false,rating:4.7,img:'https://lh3.googleusercontent.com/aida-public/AB6AXuASF1i1fc8aA-YcxvX4fx-zTXLG2SHzDb7veeVFqEvhhy-POQayVEGoBiiON6TLgXU0m-3V6Ts-ol-g7MohlakLEvkwm5B6c8Y9o1pT2AlWJyb0ja0T8HNOxeDsUDk2TYPmbsNlenmHBHeIAlN3ZuMRSEcp9v_AZskGsRTstOHUjv2FhSBuNTFZ8rpz0G_23FaZ4zrJL2Bqx7ijSHS7g3RrirhtpUK22p5vd2pXPw-fFTGXrPVtEVSW5qVWgsQ02Ai9s0EPvbTdv1J2'},
+  {id:5,name:'Dr. Lakshmi Devi',dept:'Gynecology',qual:'MBBS, MD Obs & Gynae',exp:'14+ Years',fee:700,timing:'Mon–Sat · 10AM–1PM & 4PM–7PM',available:true,rating:4.8,img:'https://lh3.googleusercontent.com/aida-public/AB6AXuCb35r8S6l1bJITzgUjBdwohONu7BILq_0OPVgA-P0XRWP3OCYVhkTcjM6BEyk6DUcjYge7NAaoJJONN8yFK0Tlarp0i2ApW34dh1ZOUo4r90m6kelrppI6ljMRu3J8gQ6icW6Av7hHw3OleGUC9XCk7jSNEBUkT9M68WeeiueFg_DqVRZv1oN_ZVfGblBF5JnizAZdZWMRmyfOe2I12caI6qZY_X1CmqH6JelnYbWLVX5SdFyCLrBoFp_X-zYNBEhIPmaauSSb-2DN'},
+  {id:6,name:'Dr. Priya Sharma',dept:'Dermatology',qual:'MBBS, MD Dermatology',exp:'10+ Years',fee:750,timing:'Mon, Wed, Fri · 4PM–7PM',available:true,rating:4.6,img:'https://lh3.googleusercontent.com/aida-public/AB6AXuB63fIZNdWvjBTVdZrZyuYqVykk7RKt4MEuC3I1VsfnTOY-ZiAMj4dK_kETDpzOtV8SUK5iLY2CM4jygTSEl_97O6swwFCGAwunpFU87lWtZbGotC3ZzeQMS682mIOpj1xezakVWWDJFM04YaDcPFdRBb4WgfoENeg6Ch4WjouH541kBA8gKRshwTu7u6pH7gcbLXwsiOxvbSSooGtHdaWt9KHN7EZQps-nt-0uLrWP6YpEm-nnJl5Onp7WlfovmwkClL4PIFpo3MIb'},
+];
+
+const LAB_REPORTS_DATA = [
+  {id:1,title:'Complete Blood Count (CBC)',type:'Blood Test',date:'2026-04-05',icon:'labs',color:'#d4edda',iconColor:'#155724'},
+  {id:2,title:'Chest X-Ray — Frontal View',type:'X-Ray',date:'2026-04-02',icon:'radiology',color:'#cfe6f2',iconColor:'#354a53'},
+  {id:3,title:'Lipid Profile Panel',type:'Blood Test',date:'2026-03-28',icon:'labs',color:'#d4edda',iconColor:'#155724'},
+  {id:4,title:'MRI — Brain (With Contrast)',type:'MRI Scan',date:'2026-03-20',icon:'mri_scan',color:'#f3e5f5',iconColor:'#6a1b9a'},
+  {id:5,title:'ECG — 12 Lead Resting',type:'ECG',date:'2026-03-15',icon:'monitor_heart',color:'#fce4ec',iconColor:'#ad1457'},
+  {id:6,title:'HbA1c — Diabetes Screening',type:'Blood Test',date:'2026-03-08',icon:'labs',color:'#d4edda',iconColor:'#155724'},
+];
+
+const HEALTH_PACKAGES_DATA = [
+  {id:1,name:'Full Body Checkup',price:1999,orig:3500,duration:'1 Day · 58 Parameters',popular:true,
+   tests:['CBC & ESR','Liver Function Test','Kidney Function Test','Thyroid (TSH)','Lipid Profile','Blood Sugar Fasting','Urine Routine','Chest X-Ray','ECG']},
+  {id:2,name:'Pregnancy Package',price:2499,orig:4000,duration:'1 Day · Pregnancy Safety Panel',popular:false,
+   tests:['Complete Blood Count','Blood Grouping & Rh','Blood Sugar','Urine Culture','Ultrasound (Obstetric)','Iron Studies','Thyroid Panel','HIV & HBsAg Screening']},
+  {id:3,name:'Dialysis Package',price:1500,orig:2200,duration:'Per Session',popular:false,
+   tests:['Haemodialysis Session','Pre/Post-dialysis Blood Test','Blood Pressure Monitoring','Weight & Fluid Balance','Nutrition Counselling']},
+  {id:4,name:'Diabetes Screening',price:799,orig:1400,duration:'Half Day · 12 Parameters',popular:false,
+   tests:['Fasting Blood Sugar','Post-Prandial Glucose','HbA1c','Lipid Profile','Kidney Function','Urine Microalbumin','BMI Assessment']},
+  {id:5,name:'Heart Health Checkup',price:2999,orig:5000,duration:'1 Day · Cardiac Panel',popular:false,
+   tests:['ECG (12-Lead)','Echo (2D)','Lipid Profile','Cardiac Enzymes (Troponin)','Blood Pressure Profile','Chest X-Ray','Treadmill Test (TMT)','Cardiologist Consultation']},
+];
+
+// ── DOCTOR FINDER ──────────────────────────────────────────────────────
+
+let activeDept = 'All';
+let localDoctors = [...DOCTORS_DATA];
+
+function buildDeptTabs() {
+  const depts = ['All','Cardiology','Neurology','Orthopedics','Pediatrics','Gynecology','Dermatology'];
+  const container = document.getElementById('deptTabs');
+  container.innerHTML = depts.map(d =>
+    `<button class="dept-tab ${d===activeDept?'active':''}" onclick="filterDoctors('${d}')">${d}</button>`
+  ).join('');
+}
+
+function filterDoctors(dept) {
+  activeDept = dept;
+  buildDeptTabs();
+  renderDoctors();
+}
+
+function renderDoctors() {
+  const isAdmin = !!window._isAdmin;
+  const grid = document.getElementById('doctorGrid');
+  document.getElementById('adminDoctorBar').style.display = isAdmin ? 'flex' : 'none';
+  if (isAdmin) grid.classList.add('admin-mode'); else grid.classList.remove('admin-mode');
+
+  let list = activeDept === 'All' ? [...localDoctors] : localDoctors.filter(d => d.dept === activeDept);
+  list.sort((a,b) => a.name.localeCompare(b.name));
+
+  if (!list.length) { grid.innerHTML = '<p style="color:var(--on-surface-variant);font-size:.875rem;padding:2rem">No doctors found in this department.</p>'; return; }
+
+  grid.innerHTML = list.map(d => `
+    <div class="doc-card">
+      <button class="btn-del-doc" onclick="deleteDoctor(${d.id})" title="Delete">🗑</button>
+      <div class="doc-avt"><img src="${d.img}" alt="${d.name}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(d.name)}&background=afefdd&color=00483c&size=72'"/></div>
+      <div class="doc-dept">${d.dept}</div>
+      <div class="doc-name">${d.name}</div>
+      <div class="doc-qual">${d.qual}</div>
+      <div class="doc-meta">
+        <div class="doc-meta-row"><span class="material-symbols-outlined">schedule</span>${d.timing}</div>
+        <div class="doc-meta-row"><span class="material-symbols-outlined">work_history</span>${d.exp} Experience</div>
+        <div class="doc-meta-row"><span class="material-symbols-outlined">payments</span>₹${d.fee} Consultation</div>
+        <div class="doc-meta-row"><span class="material-symbols-outlined">star</span>
+          <span class="doc-stars">${'★'.repeat(Math.round(d.rating))}${'☆'.repeat(5-Math.round(d.rating))}</span>
+          <span style="font-size:.7rem">${d.rating}</span>
+        </div>
+        <div class="doc-meta-row">
+          <span class="doc-avail ${d.available?'avail-yes':'avail-busy'}">${d.available?'● Available':'◌ Busy Today'}</span>
+        </div>
+      </div>
+      <button style="width:100%;background:var(--primary);color:#fff;padding:.5rem;border-radius:.45rem;font-size:.78rem;font-weight:700;cursor:pointer;border:none;font-family:inherit" onclick="closeModal('doctorModal');document.getElementById('specialty').value='${d.dept}';document.getElementById('bookingForm').scrollIntoView({behavior:'smooth'})">Book Appointment</button>
+    </div>`).join('');
+}
+
+function adminAddDoctor() {
+  const name = document.getElementById('ad-name').value.trim();
+  const dept = document.getElementById('ad-dept').value;
+  const qual = document.getElementById('ad-qual').value.trim();
+  const exp  = document.getElementById('ad-exp').value.trim();
+  const timing = document.getElementById('ad-timing').value.trim();
+  const fee  = parseInt(document.getElementById('ad-fee').value)||0;
+  if (!name) { showMsg('ad-msg','error','❌ Name is required.'); return; }
+
+  // Future: POST to /api/admin/doctors
+  const newDoc = {id: Date.now(), name, dept, qual, exp, timing, fee, available:true, rating:5.0, img:''};
+  localDoctors.push(newDoc);
+  closeModal('addDoctorModal');
+  renderDoctors();
+}
+
+function deleteDoctor(id) {
+  if (!confirm('Remove this doctor from the listing?')) return;
+  localDoctors = localDoctors.filter(d => d.id !== id);
+  // Future: DELETE /api/admin/doctors/<id>
+  renderDoctors();
+}
+
+// ── LAB REPORTS ──────────────────────────────────────────────────────
+
+function renderLabReports() {
+  const sorted = [...LAB_REPORTS_DATA].sort((a,b) => new Date(b.date)-new Date(a.date));
+  document.getElementById('labReportsList').innerHTML = sorted.map(r => `
+    <div class="lab-row">
+      <div class="lab-icon" style="background:${r.color}"><span class="material-symbols-outlined" style="color:${r.iconColor}">${r.icon}</span></div>
+      <div style="flex:1;min-width:0">
+        <div class="lab-type">${r.type}</div>
+        <div class="lab-title">${r.title}</div>
+        <div class="lab-date">${new Date(r.date).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}</div>
+      </div>
+      <div class="lab-actions">
+        <button class="lab-btn lab-btn-view" onclick="alert('Viewing: ${r.title}')">View</button>
+        <button class="lab-btn lab-btn-dl" onclick="alert('Downloading: ${r.title}')">⬇ Download</button>
+      </div>
+    </div>`).join('');
+}
+
+// ── HEALTH PACKAGES ──────────────────────────────────────────────────
+
+function renderHealthPackages() {
+  const grid = document.getElementById('pkgGrid');
+  grid.innerHTML = HEALTH_PACKAGES_DATA.map(p => {
+    const save = Math.round((1 - p.price/p.orig)*100);
+    return `
+    <div class="pkg-card ${p.popular?'popular':''}">
+      ${p.popular?'<div class="pkg-popular-badge">⭐ Most Popular</div>':''}
+      <button class="pkg-edit-btn" onclick="editPackage(${p.id})" title="Edit">✏️</button>
+      <div class="pkg-name">${p.name}</div>
+      <div style="display:flex;align-items:baseline;flex-wrap:wrap;gap:.2rem;margin-bottom:.25rem">
+        <span class="pkg-price">₹${p.price.toLocaleString('en-IN')}</span>
+        <span class="pkg-orig">₹${p.orig.toLocaleString('en-IN')}</span>
+        <span class="pkg-save">Save ${save}%</span>
+      </div>
+      <div class="pkg-duration">⏱ ${p.duration}</div>
+      <button class="pkg-toggle" onclick="toggleTests(${p.id},this)">
+        <span class="material-symbols-outlined" style="font-size:1rem">expand_more</span> View Included Tests
+      </button>
+      <div class="pkg-tests" id="tests-${p.id}">
+        ${p.tests.map(t=>`<div class="pkg-test-item">${t}</div>`).join('')}
+      </div>
+      <button class="pkg-book-btn" onclick="bookPackage('${p.name}',${p.price})">Book This Package</button>
+    </div>`;
+  }).join('');
+}
+
+function toggleTests(id, btn) {
+  const el = document.getElementById('tests-'+id);
+  el.classList.toggle('open');
+  btn.querySelector('.material-symbols-outlined').textContent = el.classList.contains('open') ? 'expand_less' : 'expand_more';
+  btn.childNodes[1].textContent = el.classList.contains('open') ? ' Hide Tests' : ' View Included Tests';
+}
+
+function editPackage(id) {
+  const p = HEALTH_PACKAGES_DATA.find(x=>x.id===id);
+  const newPrice = prompt(`Edit price for "${p.name}" (current ₹${p.price}):`, p.price);
+  if (newPrice !== null && !isNaN(parseInt(newPrice))) {
+    p.price = parseInt(newPrice);
+    renderHealthPackages();
+  }
+}
+
+function bookPackage(name, price) {
+  closeModal('healthPkgModal');
+  document.getElementById('specialty').value = 'Cardiology';
+  document.getElementById('bookingMsg').textContent = `📦 Package selected: ${name} (₹${price}). Complete your booking below.`;
+  document.getElementById('bookingMsg').style.color = 'var(--primary)';
+  document.getElementById('bookingForm').scrollIntoView({behavior:'smooth'});
+}
+
+// ── Hook modal open to render content ─────────────────────────────────
+
+const _origOpenModal = openModal;
+openModal = function(id) {
+  _origOpenModal(id);
+  if (id === 'doctorModal') { buildDeptTabs(); renderDoctors(); }
+  if (id === 'labModal') renderLabReports();
+  if (id === 'healthPkgModal') renderHealthPackages();
+};
 </script>
 </body>
 </html>

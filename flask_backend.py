@@ -38,6 +38,14 @@ from functools import wraps
 from datetime import datetime
 import os
 
+# Load .env file if it exists (for local development)
+# In production (Render.com), environment variables are set in the dashboard
+try:
+    from dotenv import load_dotenv
+    load_dotenv()  # Reads .env file → os.environ
+except ImportError:
+    pass  # python-dotenv not installed → use system env vars (production)
+
 # ─────────────────────────────────────────────────────────────
 # App Setup
 # ─────────────────────────────────────────────────────────────
@@ -46,40 +54,45 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__, static_folder=BASE_DIR, template_folder=BASE_DIR)
 
 # Secret key: used to sign session cookies — keep this private!
-# Real life: This is the hospital's vault combination.
-app.secret_key = 'aadityaa-hyderabad-flask-secret-2024'
+# Reads from environment variable (safe) with a fallback for dev
+app.secret_key = os.environ.get('SECRET_KEY', 'dev-fallback-secret-change-in-production')
 
 # ─────────────────────────────────────────────────────────────
-# Database — SQLite
+# Database — SQLite locally, PostgreSQL on Render.com
 #
-# hospital.db is created in your project folder.
-# Unlike a Python list, THIS SURVIVES server restarts!
+# HOW IT WORKS:
+#   Local (your PC):  uses hospital.db (SQLite file)
+#   On Render:        uses PostgreSQL  (set DATABASE_URL in Render dashboard)
 #
-# Real life: Before = whiteboard (erases on off).
-#            Now    = printed register book (permanent).
-# ─────────────────────────────────────────────────────────────
-app.config['SQLALCHEMY_DATABASE_URI'] = (
+# Real life:
+#   Local  = whiteboard (works but resets when building closes)
+#   Render = bank server in a separate building (permanent!)
+DATABASE_URL = os.environ.get(
+    'DATABASE_URL',
     f"sqlite:///{os.path.join(BASE_DIR, 'hospital.db')}"
 )
+# Render gives 'postgres://' but SQLAlchemy needs 'postgresql+psycopg2://'
+if DATABASE_URL.startswith('postgres://'):
+    DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql+psycopg2://', 1)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # ─────────────────────────────────────────────────────────────
 # Email — Gmail SMTP
 #
-# Replace 'YOUR_GMAIL_APP_PASSWORD' with the 16-char App Password
-# you get from myaccount.google.com → App passwords.
-#
-# If not configured, emails are just printed to console.
-# ─────────────────────────────────────────────────────────────
-MAIL_APP_PASSWORD = 'pstueolrfrpuesvq'   # Gmail App Password
+# Reads from environment variables (safe!) — set in .env locally
+# or in Render.com dashboard for production.
+MAIL_APP_PASSWORD = os.environ.get('MAIL_APP_PASSWORD', '')
+MAIL_USERNAME     = os.environ.get('MAIL_USERNAME', 'venkateshbonthala8055@gmail.com')
 
 app.config.update(
     MAIL_SERVER='smtp.gmail.com',
     MAIL_PORT=587,
     MAIL_USE_TLS=True,
-    MAIL_USERNAME='venkateshbonthala8055@gmail.com',
+    MAIL_USERNAME=MAIL_USERNAME,
     MAIL_PASSWORD=MAIL_APP_PASSWORD,
-    MAIL_DEFAULT_SENDER=('Aadityaa Hospital', 'venkateshbonthala8055@gmail.com'),
+    MAIL_DEFAULT_SENDER=('Aadityaa Hospital', MAIL_USERNAME),
 )
 
 db   = SQLAlchemy(app)
@@ -324,6 +337,11 @@ def serve_css():
 def admin_page():
     """Serve the admin dashboard."""
     return send_from_directory(BASE_DIR, 'admin.html')
+
+@app.route('/health_tips.html')
+def health_tips():
+    """Serve the health tips & wellness guide page."""
+    return send_from_directory(BASE_DIR, 'health_tips.html')
 
 
 # ═════════════════════════════════════════════════════════════

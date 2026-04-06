@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Health Tips & Wellness Guide | Aadityaa Hospital</title>
+<meta name="description" content="Expert health tips from Aadityaa Hospital's specialists — food, fitness, sleep, hydration, preventive care, and stress management."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --primary:#00483c;--on-primary:#fff;
+  --primary-container:#1f6052;
+  --primary-fixed:#afefdd;--primary-fixed-dim:#94d3c1;
+  --on-primary-fixed:#00201a;--on-primary-fixed-variant:#065043;
+  --secondary:#4c616c;--on-secondary:#fff;
+  --secondary-fixed:#cfe6f2;--on-secondary-fixed-variant:#354a53;
+  --tertiary:#194543;--on-tertiary:#fff;
+  --tertiary-fixed:#beebe7;--on-tertiary-fixed-variant:#224e4b;
+  --error:#ba1a1a;--on-error:#fff;
+  --surface:#f8fafb;
+  --surface-container-lowest:#fff;
+  --surface-container-low:#f2f4f5;
+  --surface-container:#eceeef;
+  --surface-container-high:#e6e8e9;
+  --surface-variant:#e1e3e4;
+  --on-surface:#191c1d;--on-surface-variant:#3f4949;
+  --outline:#6f7979;--outline-variant:#bec8c9;
+  --inverse-surface:#2e3132;--inverse-on-surface:#eff1f2;
+  --inverse-primary:#94d3c1;
+}
+body{font-family:'Inter',sans-serif;background:var(--surface);color:var(--on-surface);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;border:none;font-family:inherit;background:none}
+.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}
+
+/* NAV */
+.site-header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop-filter:blur(20px);border-bottom:1px solid rgba(190,200,201,.2)}
+.nav-inner{max-width:80rem;margin:0 auto;padding:0 1.5rem;height:72px;display:flex;align-items:center;justify-content:space-between}
+.nav-brand{display:flex;align-items:center;gap:.75rem;text-decoration:none}
+.nav-logo-icon{width:36px;height:36px;background:var(--primary);color:#fff;border-radius:.6rem;display:flex;align-items:center;justify-content:center}
+.site-name{font-family:'Manrope',sans-serif;font-weight:800;font-size:1.1rem;color:var(--primary)}
+.btn-back{background:var(--surface-container);color:var(--on-surface);padding:.5rem 1.25rem;border-radius:.5rem;font-size:.875rem;font-weight:700;display:flex;align-items:center;gap:.4rem;transition:background .2s}
+.btn-back:hover{background:var(--surface-variant)}
+
+/* HERO */
+.tips-hero{background:linear-gradient(135deg,var(--primary),var(--primary-container));color:#fff;padding:4rem 1.5rem 3rem;text-align:center}
+.tips-hero-inner{max-width:52rem;margin:0 auto}
+.tips-badge{display:inline-block;background:rgba(255,255,255,.15);padding:.25rem .9rem;border-radius:2rem;font-size:.7rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1rem}
+.tips-hero h1{font-family:'Manrope',sans-serif;font-size:clamp(2rem,5vw,3.25rem);font-weight:800;margin-bottom:1rem;line-height:1.15}
+.tips-hero p{font-size:1.05rem;opacity:.85;max-width:38rem;margin:0 auto 2rem}
+.tips-cats{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center}
+.tips-cat-pill{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;padding:.35rem .9rem;border-radius:2rem;font-size:.75rem;font-weight:600;cursor:pointer;transition:background .2s}
+.tips-cat-pill:hover,.tips-cat-pill.active{background:rgba(255,255,255,.3)}
+
+/* MAIN CONTENT */
+.tips-main{max-width:80rem;margin:0 auto;padding:4rem 1.5rem}
+.tips-grid{display:grid;grid-template-columns:1fr;gap:3rem}
+@media(min-width:900px){.tips-grid{grid-template-columns:1fr 1fr}}
+
+/* TIP SECTION CARDS */
+.tip-section{background:var(--surface-container-lowest);border-radius:1.25rem;border:1px solid rgba(190,200,201,.15);overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.04);transition:box-shadow .3s}
+.tip-section:hover{box-shadow:0 8px 30px rgba(0,72,60,.08)}
+.tip-section-header{padding:1.75rem 2rem 1.25rem;display:flex;align-items:flex-start;gap:1rem}
+.tip-icon{width:52px;height:52px;border-radius:.85rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tip-icon .material-symbols-outlined{font-size:1.6rem;font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24}
+.tip-icon.green{background:var(--primary-fixed);color:var(--primary)}
+.tip-icon.teal{background:var(--tertiary-fixed);color:var(--tertiary)}
+.tip-icon.blue{background:var(--secondary-fixed);color:var(--secondary)}
+.tip-icon.orange{background:#fff3e0;color:#e65100}
+.tip-icon.purple{background:#f3e5f5;color:#6a1b9a}
+.tip-icon.pink{background:#fce4ec;color:#ad1457}
+.tip-section-title{font-family:'Manrope',sans-serif;font-weight:800;font-size:1.2rem;color:var(--on-surface);margin-bottom:.25rem}
+.tip-section-sub{font-size:.8rem;color:var(--on-surface-variant)}
+.tip-items{padding:0 2rem 1.75rem;display:flex;flex-direction:column;gap:.85rem}
+.tip-item{display:flex;gap:.85rem;align-items:flex-start;padding:.9rem;background:var(--surface-container-low);border-radius:.75rem}
+.tip-item-dot{width:8px;height:8px;border-radius:50%;background:var(--primary);flex-shrink:0;margin-top:.45rem}
+.tip-item-text{font-size:.875rem;color:var(--on-surface-variant);line-height:1.65}
+.tip-item-text strong{color:var(--on-surface)}
+.tip-tag{display:inline-block;background:var(--primary-fixed);color:var(--on-primary-fixed);font-size:.625rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:.15rem .5rem;border-radius:.25rem;margin-bottom:.4rem}
+
+/* FEATURED STAT BAR */
+.stats-bar{background:var(--primary);color:#fff;padding:2.5rem 1.5rem;margin:0}
+.stats-bar-inner{max-width:80rem;margin:0 auto;display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;text-align:center}
+@media(min-width:640px){.stats-bar-inner{grid-template-columns:repeat(4,1fr)}}
+.stat-item-num{font-family:'Manrope',sans-serif;font-size:2.25rem;font-weight:800;line-height:1}
+.stat-item-label{font-size:.75rem;opacity:.8;text-transform:uppercase;font-weight:600;letter-spacing:.05em;margin-top:.35rem}
+
+/* FOOTER STRIP */
+.tips-footer{background:var(--inverse-surface);color:var(--inverse-on-surface);padding:2.5rem 1.5rem;text-align:center}
+.tips-footer a{color:var(--inverse-primary);font-weight:700}
+.tips-footer p{font-size:.875rem;opacity:.8}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <div class="nav-logo-icon">
+        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;font-size:1.1rem">local_hospital</span>
+      </div>
+      <span class="site-name">Aadityaa Hospital</span>
+    </a>
+    <a href="/" class="btn-back">
+      <span class="material-symbols-outlined" style="font-size:1rem">arrow_back</span>
+      Back to Home
+    </a>
+  </div>
+</header>
+
+<section class="tips-hero">
+  <div class="tips-hero-inner">
+    <span class="tips-badge">🩺 Expert Wellness Guide</span>
+    <h1>Your Complete<br/>Health Tips Library</h1>
+    <p>Evidence-based guidance from Aadityaa Hospital's specialists — simple habits that make a big difference to your long-term health.</p>
+    <div class="tips-cats">
+      <span class="tips-cat-pill active">All Tips</span>
+      <span class="tips-cat-pill">🥗 Food</span>
+      <span class="tips-cat-pill">🏃 Activity</span>
+      <span class="tips-cat-pill">😴 Sleep</span>
+      <span class="tips-cat-pill">💧 Hydration</span>
+      <span class="tips-cat-pill">🛡️ Preventive</span>
+      <span class="tips-cat-pill">🧘 Stress</span>
+    </div>
+  </div>
+</section>
+
+<div class="stats-bar">
+  <div class="stats-bar-inner">
+    <div><div class="stat-item-num">6</div><div class="stat-item-label">Wellness Categories</div></div>
+    <div><div class="stat-item-num">30+</div><div class="stat-item-label">Expert Tips</div></div>
+    <div><div class="stat-item-num">150+</div><div class="stat-item-label">Specialists</div></div>
+    <div><div class="stat-item-num">25+</div><div class="stat-item-label">Years of Trust</div></div>
+  </div>
+</div>
+
+<main class="tips-main">
+  <div class="tips-grid">
+
+    <!-- 1. Healthy Food Habits -->
+    <div class="tip-section">
+      <div class="tip-section-header">
+        <div class="tip-icon green"><span class="material-symbols-outlined">nutrition</span></div>
+        <div>
+          <div class="tip-tag">Food Habits</div>
+          <h2 class="tip-section-title">Healthy Food Habits</h2>
+          <p class="tip-section-sub">By our Nutrition & Internal Medicine team</p>
+        </div>
+      </div>
+      <div class="tip-items">
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>Eat a rainbow daily.</strong> Include at least 5 colours of fruits and vegetables — each colour provides unique phytonutrients and antioxidants your body needs.</p></div>
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>Reduce ultra-processed foods.</strong> Packaged snacks, instant noodles, and sugary drinks raise your risk of diabetes, heart disease, and obesity. Cook at home when possible.</p></div>
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>Choose whole grains.</strong> Replace white rice and maida with millets, brown rice, or whole wheat to maintain blood sugar levels and increase fibre intake.</p></div>
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>Limit sodium to 5g/day.</strong> Excess salt raises blood pressure. Use herbs and spices for flavour instead. Check labels — packaged foods hide salt.</p></div>
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>Eat mindfully.</strong> Slow down, chew thoroughly, and avoid screens while eating. This improves digestion and prevents overeating.</p></div>
+      </div>
+    </div>
+
+    <!-- 2. Physical Activity -->
+    <div class="tip-section">
+      <div class="tip-section-header">
+        <div class="tip-icon teal"><span class="material-symbols-outlined">directions_run</span></div>
+        <div>
+          <div class="tip-tag">Physical Activity</div>
+          <h2 class="tip-section-title">Physical Activity Guidance</h2>
+          <p class="tip-section-sub">By our Orthopaedics & Physiotherapy team</p>
+        </div>
+      </div>
+      <div class="tip-items">
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>150 minutes per week minimum.</strong> WHO recommends at least 150 minutes of moderate aerobic activity (brisk walking, cycling, swimming) weekly for adults.</p></div>
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>Break sitting time.</strong> For every 45-60 minutes of sitting, stand up and walk for 5 minutes. Prolonged sitting raises risk of cardiovascular disease even if you exercise.</p></div>
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>Strength training twice a week.</strong> Muscle mass declines after age 30. Include bodyweight exercises (squats, push-ups) or resistance bands to preserve strength and bone density.</p></div>
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>Warm up and cool down.</strong> Always spend 5 minutes warming up before exercise and 5 minutes stretching after to prevent injury and improve flexibility.</p></div>
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>Start small, stay consistent.</strong> A 20-minute daily walk beats an intense 2-hour weekend session. Consistency is the most important factor in long-term fitness.</p></div>
+      </div>
+    </div>
+
+    <!-- 3. Sleep Hygiene -->
+    <div class="tip-section">
+      <div class="tip-section-header">
+        <div class="tip-icon purple"><span class="material-symbols-outlined">bedtime</span></div>
+        <div>
+          <div class="tip-tag">Sleep Hygiene</div>
+          <h2 class="tip-section-title">Better Sleep Habits</h2>
+          <p class="tip-section-sub">By our Neurology & Mental Health team</p>
+        </div>
+      </div>
+      <div class="tip-items">
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>7–9 hours for adults.</strong> Chronic sleep deprivation is linked to obesity, diabetes, depression, and weakened immunity. Treat sleep as a health priority.</p></div>
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>Keep a fixed sleep schedule.</strong> Go to bed and wake up at the same time every day — even on weekends. This regulates your internal body clock.</p></div>
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>No screens 1 hour before bed.</strong> Blue light from phones and laptops suppresses melatonin production. Use night mode or switch to books in the evening.</p></div>
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>Keep your bedroom cool and dark.</strong> Optimal sleep temperature is 18–20°C. Use blackout curtains and reduce noise to improve sleep quality.</p></div>
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>Avoid caffeine after 2 PM.</strong> Caffeine has a half-life of 5–6 hours. An afternoon coffee can still be disrupting your sleep at midnight.</p></div>
+      </div>
+    </div>
+
+    <!-- 4. Hydration -->
+    <div class="tip-section">
+      <div class="tip-section-header">
+        <div class="tip-icon blue"><span class="material-symbols-outlined">water_drop</span></div>
+        <div>
+          <div class="tip-tag">Hydration</div>
+          <h2 class="tip-section-title">Staying Properly Hydrated</h2>
+          <p class="tip-section-sub">By our Nephrology & Internal Medicine team</p>
+        </div>
+      </div>
+      <div class="tip-items">
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>Drink 2–3 litres of water daily.</strong> In Hyderabad's heat, aim for the upper end. Dehydration causes fatigue, headaches, poor concentration, and kidney stones.</p></div>
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>Start the day with water.</strong> Drink a glass of water first thing in the morning before tea or coffee. It replenishes what you lost overnight.</p></div>
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>Check your urine colour.</strong> Pale yellow = well hydrated. Dark yellow = drink more water. This is the easiest hydration check you can do.</p></div>
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>Eat water-rich foods.</strong> Cucumber, watermelon, curd, tomatoes, and oranges all contribute significantly to your daily fluid intake.</p></div>
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>Limit sugary drinks.</strong> Soft drinks, packaged juices, and energy drinks cause blood sugar spikes and dehydrate you further. Water, buttermilk, and coconut water are best.</p></div>
+      </div>
+    </div>
+
+    <!-- 5. Preventive Care -->
+    <div class="tip-section">
+      <div class="tip-section-header">
+        <div class="tip-icon orange"><span class="material-symbols-outlined">health_and_safety</span></div>
+        <div>
+          <div class="tip-tag">Preventive Care</div>
+          <h2 class="tip-section-title">Preventive Health Screenings</h2>
+          <p class="tip-section-sub">By our General Medicine & Diagnostic team</p>
+        </div>
+      </div>
+      <div class="tip-items">
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>Annual full body checkup after age 30.</strong> Many serious conditions — diabetes, hypertension, thyroid issues — show no symptoms early on. A yearly panel catches them before they progress.</p></div>
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>Know your numbers.</strong> Target: Blood pressure below 120/80, fasting glucose below 100 mg/dL, BMI 18.5–24.9, and total cholesterol below 200 mg/dL.</p></div>
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>Stay up to date on vaccinations.</strong> Influenza, Hepatitis B, Tetanus, and HPV vaccines are recommended for adults. Consult your doctor for your personal schedule.</p></div>
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>Dental checkups every 6 months.</strong> Oral health is directly linked to heart health. Gum disease bacteria can enter the bloodstream and increase cardiac risk.</p></div>
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>Eye and hearing tests annually.</strong> Vision and hearing loss are gradual — you often don't notice. Early correction prevents accidents and improves quality of life significantly.</p></div>
+      </div>
+    </div>
+
+    <!-- 6. Stress Management -->
+    <div class="tip-section">
+      <div class="tip-section-header">
+        <div class="tip-icon pink"><span class="material-symbols-outlined">self_improvement</span></div>
+        <div>
+          <div class="tip-tag">Stress Management</div>
+          <h2 class="tip-section-title">Managing Stress & Mental Health</h2>
+          <p class="tip-section-sub">By our Psychiatry & Neurology team</p>
+        </div>
+      </div>
+      <div class="tip-items">
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>Practice deep breathing daily.</strong> The 4-7-8 technique (inhale 4s, hold 7s, exhale 8s) activates your parasympathetic nervous system and reduces cortisol within minutes.</p></div>
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>Set boundaries with technology.</strong> Constant notifications keep your brain in a state of low-level stress. Schedule "phone-free" times — especially during meals and the first 30 minutes after waking.</p></div>
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>Maintain social connections.</strong> Loneliness is as damaging to health as smoking 15 cigarettes a day. Invest in relationships — call a friend, join a community group, or simply talk to a neighbour.</p></div>
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>Try mindfulness or meditation.</strong> Even 10 minutes of mindfulness daily reduces anxiety, improves focus, and lowers blood pressure. Apps like Headspace or YouTube guided sessions work well.</p></div>
+        <div class="tip-item"><div class="tip-item-dot"></div><p class="tip-item-text"><strong>Seek help early.</strong> Mental health conditions are medical conditions. If you feel persistently low, anxious, or overwhelmed, please speak to a psychiatrist. Treatment is effective and confidential at Aadityaa Hospital.</p></div>
+      </div>
+    </div>
+
+  </div><!-- end tips-grid -->
+</main>
+
+<div class="tips-footer">
+  <p>These tips are general wellness guidance and do not replace professional medical advice.<br/>
+  For personalised care, <a href="/">book an appointment</a> at Aadityaa Hospital — <strong>8886799666</strong></p>
+</div>
+
+<script>
+// Category pill filter (visual only — full filter would use data-category attributes)
+document.querySelectorAll('.tips-cat-pill').forEach(pill => {
+  pill.addEventListener('click', function() {
+    document.querySelectorAll('.tips-cat-pill').forEach(p => p.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

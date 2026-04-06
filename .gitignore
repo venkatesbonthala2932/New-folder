@@ -1,0 +1,40 @@
+# Aadityaa Hospital — .gitignore
+# Files that should NEVER be pushed to GitHub
+
+# Virtual environment — too big (500MB+), others create their own
+.venv/
+venv/
+env/
+
+# Python compiled files — auto-generated
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Database files — contains REAL patient data (privacy law!)
+*.db
+*.sqlite
+*.sqlite3
+hospital.db
+
+# Secret keys & passwords — NEVER share these!
+.env
+*.env
+.env.local
+.env.production
+
+# Operating system junk files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE / Editor settings
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+*.log
+logs/
