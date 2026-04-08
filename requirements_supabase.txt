@@ -1,0 +1,15 @@
+# Aadityaa Hospital — Python Dependencies (Supabase Version)
+# Install with: pip install -r requirements.txt
+
+# ── Core Flask ───────────────────────────────────────────────
+flask>=3.0.0
+flask-cors>=4.0.0
+flask-mail>=0.9.1
+
+# ── Supabase (NEW — replaces flask-sqlalchemy + werkzeug) ────
+# supabase: main Python client to talk to Supabase
+supabase>=2.4.0
+
+# ── Utilities ────────────────────────────────────────────────
+python-dotenv>=1.0.0
+gunicorn>=21.0.0
