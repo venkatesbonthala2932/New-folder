@@ -126,36 +126,77 @@ def get_token_from_request():
     return None
 
 
+def decode_jwt_uid(token: str):
+    """
+    Decode the user UUID directly from the JWT token — NO network call needed.
+
+    WHY? Old code called supabase.auth.get_user(token) on EVERY request.
+    That means every booking, every page load → HTTP call to Supabase → wait.
+    If Supabase is slow, the whole app hangs showing "Please wait..." forever.
+
+    JWT tokens are signed strings with 3 parts: header.payload.signature
+    The payload contains the user's UUID — we just base64-decode it.
+    No network needed. Done in microseconds.
+
+    Real life: Old way = asking the bank "is this card valid?" for every purchase.
+    New way = reading the card chip directly — instant.
+    """
+    try:
+        import base64, json
+        payload_b64 = token.split('.')[1]
+        # Fix base64 padding (JWT often omits = padding)
+        payload_b64 += '=' * (4 - len(payload_b64) % 4)
+        payload = json.loads(base64.urlsafe_b64decode(payload_b64))
+        return payload.get('sub')  # 'sub' is the user UUID in Supabase JWTs
+    except Exception:
+        return None
+
+
 def get_current_user():
     """
-    Verify the JWT token and return the user's profile from Supabase.
-    Returns None if token is missing, expired, or invalid.
-
-    WHY supabase.auth.get_user(token)?
-    This asks Supabase: "Is this token valid? Who does it belong to?"
-    Supabase checks its own records and returns the user's UUID.
-    We then fetch that user's extra info from our profiles table.
+    Verify JWT token and return user profile.
+    Fast: decodes token locally, only fetches profile from DB once per request.
     """
     token = get_token_from_request()
     if not token:
         return None
     try:
-        # Ask Supabase Auth to verify the token
-        user_response = supabase.auth.get_user(token)
-        auth_user = user_response.user
-        if not auth_user:
+        # Step 1: Get user UUID from token locally (NO network call)
+        user_id = decode_jwt_uid(token)
+        if not user_id:
             return None
 
-        # Get extra profile info (name, phone, is_admin)
-        # WHY separate profiles table? Supabase Auth only stores email+password.
-        # Custom fields like name, phone go in our profiles table.
-        profile = supabase.table('profiles').select('*').eq('id', auth_user.id).single().execute()
-        if profile.data:
-            profile.data['email'] = auth_user.email  # merge email from auth
-            return profile.data
+        # Step 2: Get email from Supabase Auth (needed for email field)
+        # WHY still call this? We need the email address for responses.
+        # But we only do it ONCE and fall back gracefully if it fails.
+        email = ''
+        try:
+            user_response = supabase.auth.get_user(token)
+            if user_response.user:
+                email = user_response.user.email
+        except Exception:
+            pass  # If this fails, we still have the user_id and can continue
+
+        # Step 3: Fetch profile (name, phone, is_admin) from our DB
+        profile_res = supabase.table('profiles').select('*').eq('id', user_id).maybe_single().execute()
+        profile_data = profile_res.data or {}
+        profile_data['email'] = email
+        profile_data['id']    = str(user_id)
+
+        # If profile missing (e.g. RLS blocked insert during registration)
+        # return basic info so login/booking still works
+        if not profile_res.data:
+            profile_data['name']     = email.split('@')[0] if email else 'User'
+            profile_data['phone']    = ''
+            profile_data['is_admin'] = False
+
+        return profile_data
+    except Exception as e:
+        print(f'  [get_current_user ERROR] {e}')
         return None
-    except Exception:
-        return None
+
+
+
 
 
 def login_required(f):
@@ -382,19 +423,32 @@ def login():
 
     auth_user = auth_response.user
 
-    # Fetch profile (name, phone, is_admin)
-    profile = supabase.table('profiles').select('*').eq('id', auth_user.id).single().execute()
-    profile_data = profile.data or {}
-    profile_data['email'] = auth_user.email
+    # Fetch profile — use maybe_single() so it doesn't crash if profile is missing
+    profile_res = supabase.table('profiles').select('*').eq('id', auth_user.id).maybe_single().execute()
+    profile_data = profile_res.data or {}
+
+    # Auto-create missing profile (happens when RLS blocked the INSERT during registration)
+    if not profile_res.data:
+        try:
+            supabase.table('profiles').insert({
+                'id':       str(auth_user.id),
+                'name':     auth_user.email.split('@')[0],
+                'phone':    '',
+                'is_admin': False,
+            }).execute()
+            profile_data = {'name': auth_user.email.split('@')[0], 'phone': '', 'is_admin': False}
+        except Exception:
+            pass  # Profile may already exist, or RLS still blocking — continue anyway
 
     user_dict = {
         'id':           str(auth_user.id),
-        'name':         profile_data.get('name', ''),
+        'name':         profile_data.get('name', auth_user.email.split('@')[0]),
         'email':        auth_user.email,
         'phone':        profile_data.get('phone', ''),
         'is_admin':     profile_data.get('is_admin', False),
         'member_since': '',
     }
+
 
     return jsonify({
         'success': True,

@@ -759,8 +759,30 @@ select,input{font-family:inherit}
 </div>
 
 <script>
-const API = 'http://localhost:5000';
+// ── API Base URL ────────────────────────────────────────────
+// WHY window.location.origin? So it works from ANY device on the network.
+// Old: 'http://localhost:5000' — only worked on YOUR laptop.
+// New: automatically uses whatever URL the browser is on.
+// Example: If browser opens 192.168.29.110:5000 → API calls go there too.
+const API = window.location.origin;
 let currentUser = null;
+
+// ── JWT Token helpers ───────────────────────────────────────
+// WHY localStorage? Supabase gives us a JWT token after login.
+// We store it here and send it with every request.
+// Old system used browser cookies (session). JWT works on any device/app.
+function saveToken(token)  { if (token) localStorage.setItem('sb_token', token); }
+function getToken()        { return localStorage.getItem('sb_token') || ''; }
+function clearToken()      { localStorage.removeItem('sb_token'); }
+
+// Build fetch headers — always include the JWT token
+function authHeaders() {
+  const token = getToken();
+  return {
+    'Content-Type': 'application/json',
+    ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+  };
+}
 
 // ── Modal helpers ──────────────────────────────────────────
 function openModal(id) {
@@ -776,11 +798,15 @@ document.querySelectorAll('.modal-overlay').forEach(el => {
 });
 
 // ── Check session on page load ─────────────────────────────
+// WHY /api/me? Sends our stored token → server verifies it → returns user info
 async function checkSession() {
+  const token = getToken();
+  if (!token) return; // no token = not logged in, skip
   try {
-    const res  = await fetch(`${API}/api/me`, {credentials:'include'});
+    const res  = await fetch(`${API}/api/me`, { headers: authHeaders() });
     const data = await res.json();
     if (data.success) setLoggedIn(data.user);
+    else clearToken(); // token expired or invalid — clear it
   } catch(e) {}
 }
 
@@ -796,6 +822,7 @@ function setLoggedIn(user) {
 
 function setLoggedOut() {
   currentUser = null;
+  clearToken();
   document.getElementById('navGuest').style.display = 'flex';
   document.getElementById('navUser').style.display  = 'none';
   document.getElementById('patientName').value  = '';
@@ -809,9 +836,9 @@ async function doLogin() {
   btn.disabled = true; btn.textContent = 'Logging in...';
   msg.className = 'm-msg'; msg.textContent = '';
 
-  const res  = await fetch(`${API}/api/login`, {
-    method:'POST', credentials:'include',
-    headers:{'Content-Type':'application/json'},
+  const res = await fetch(`${API}/api/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       email:    document.getElementById('li-email').value.trim(),
       password: document.getElementById('li-pass').value
@@ -822,10 +849,13 @@ async function doLogin() {
 
   if (!res) { showMsg('li-msg','error','❌ Cannot reach server. Is Flask running?'); return; }
   const data = await res.json();
+
   if (data.success) {
+    // Store JWT token so we stay logged in across page refreshes
+    if (data.session?.access_token) saveToken(data.session.access_token);
     setLoggedIn(data.user);
     closeModal('loginModal');
-    showMsg('li-msg','',''); // clear
+    showMsg('li-msg','','');
   } else {
     showMsg('li-msg','error','❌ ' + data.message);
   }
@@ -837,8 +867,8 @@ async function doRegister() {
   btn.disabled = true; btn.textContent = 'Creating account...';
 
   const res = await fetch(`${API}/api/register`, {
-    method:'POST', credentials:'include',
-    headers:{'Content-Type':'application/json'},
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       name:     document.getElementById('rg-name').value.trim(),
       email:    document.getElementById('rg-email').value.trim(),
@@ -851,7 +881,10 @@ async function doRegister() {
 
   if (!res) { showMsg('rg-msg','error','❌ Cannot reach server.'); return; }
   const data = await res.json();
+
   if (data.success) {
+    // Auto-login after registration — save the token
+    if (data.session?.access_token) saveToken(data.session.access_token);
     setLoggedIn(data.user);
     closeModal('registerModal');
   } else {
@@ -861,7 +894,10 @@ async function doRegister() {
 
 // ── Logout ─────────────────────────────────────────────────
 async function doLogout() {
-  await fetch(`${API}/api/logout`, {method:'POST', credentials:'include'}).catch(()=>{});
+  await fetch(`${API}/api/logout`, {
+    method: 'POST',
+    headers: authHeaders()
+  }).catch(() => {});
   setLoggedOut();
 }
 
@@ -871,7 +907,8 @@ async function loadMyAppointments() {
   const sub  = document.getElementById('myAptSub');
   list.innerHTML = '<p style="color:var(--on-surface-variant);font-size:13px">Loading...</p>';
 
-  const res  = await fetch(`${API}/api/my-appointments`, {credentials:'include'}).catch(()=>null);
+  // Send JWT token so server knows who we are
+  const res  = await fetch(`${API}/api/my-appointments`, { headers: authHeaders() }).catch(() => null);
   if (!res) { list.innerHTML = '<p style="color:var(--error);font-size:13px">Could not load appointments.</p>'; return; }
   const data = await res.json();
 
@@ -894,7 +931,10 @@ async function loadMyAppointments() {
 
 async function cancelApt(id) {
   if (!confirm(`Cancel appointment ${id}?`)) return;
-  const res  = await fetch(`${API}/api/appointments/${id}`, {method:'DELETE', credentials:'include'});
+  const res  = await fetch(`${API}/api/appointments/${id}`, {
+    method: 'DELETE',
+    headers: authHeaders()
+  });
   const data = await res.json();
   if (data.success) loadMyAppointments();
   else alert('Error: ' + data.message);
@@ -906,9 +946,10 @@ async function doChangePhone() {
   const password = document.getElementById('ph-pass').value;
   const msg      = document.getElementById('ph-msg');
 
+  // WHY authHeaders()? Phone change is a protected route — needs JWT token
   const res = await fetch(`${API}/api/me/phone`, {
-    method:'PUT', credentials:'include',
-    headers:{'Content-Type':'application/json'},
+    method: 'PUT',
+    headers: authHeaders(),
     body: JSON.stringify({new_phone: newPhone, current_password: password})
   }).catch(() => null);
 
@@ -929,8 +970,10 @@ document.getElementById('bookingForm').addEventListener('submit', async function
   const btn   = document.getElementById('bookBtn');
   const msgEl = document.getElementById('bookingMsg');
 
-  // Must be logged in to book
-  if (!currentUser) {
+  // WHY check token too? currentUser is set in memory (lost on refresh).
+  // But the JWT token stays in localStorage across refreshes.
+  // So even if currentUser is null in memory, the token proves they're logged in.
+  if (!currentUser && !getToken()) {
     msgEl.style.color = 'var(--error)';
     msgEl.textContent = '❌ Please login first to book an appointment.';
     setTimeout(() => openModal('loginModal'), 800);
@@ -941,9 +984,12 @@ document.getElementById('bookingForm').addEventListener('submit', async function
   msgEl.style.color   = 'var(--secondary)';
   msgEl.textContent   = 'Please wait...';
 
+  // WHY authHeaders()? /api/book has @login_required.
+  // It checks the Authorization: Bearer <token> header.
+  // Without it, Flask says "Please log in" even though the user IS logged in.
   const res = await fetch(`${API}/api/book`, {
-    method:'POST', credentials:'include',
-    headers:{'Content-Type':'application/json'},
+    method: 'POST',
+    headers: authHeaders(),
     body: JSON.stringify({
       specialty: document.getElementById('specialty').value,
       date:      document.getElementById('aptDate').value,
