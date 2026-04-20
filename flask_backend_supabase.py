@@ -560,6 +560,25 @@ def book_appointment():
     if missing:
         return jsonify({'success': False, 'message': f'Please fill in: {", ".join(missing)}'}), 400
 
+    # FIX 1 (Backend): Validate the date is not in the past.
+    # WHY validate on the backend too?
+    # A smart user can open browser DevTools and change the HTML to bypass the
+    # frontend min-date check. The backend is the final guard — it always checks.
+    # Think of it like a nightclub: the website is the bouncer at the door (frontend),
+    # but security inside (backend) double-checks your ID anyway.
+    from datetime import date as date_type
+    try:
+        submitted_date = date_type.fromisoformat(data['date'])  # "YYYY-MM-DD" → date object
+        today = date_type.today()
+        if submitted_date < today:
+            return jsonify({
+                'success': False,
+                'message': f'Past dates are not allowed. You submitted {data["date"]}. Please choose today or a future date.'
+            }), 400
+    except ValueError:
+        return jsonify({'success': False, 'message': 'Invalid date format. Use YYYY-MM-DD.'}), 400
+
+
     doctor_id = data.get('doctor_id')
     doctor_name = 'Any Available Doctor'
     if doctor_id:
@@ -824,28 +843,39 @@ def contact():
 @app.route('/api/admin/stats', methods=['GET'])
 @admin_required
 def admin_stats():
-    patients_res = supabase.table('profiles').select('id', count='exact').eq('is_admin', False).execute()
-    doctors_res  = supabase.table('doctors').select('id', count='exact').execute()
-    apts_res     = supabase.table('appointments').select('id', count='exact').execute()
-    conf_res     = supabase.table('appointments').select('id', count='exact').eq('status','Confirmed').execute()
-    canc_res     = supabase.table('appointments').select('id', count='exact').eq('status','Cancelled').execute()
-    msgs_res     = supabase.table('contact_messages').select('id', count='exact').eq('is_read', False).execute()
+    # WHY len(data) instead of .count? The .count property from Supabase SDK
+    # sometimes returns None in certain configurations. Using len() on the actual
+    # returned rows is always reliable, just slightly more data transferred.
+    patients_res = supabase.table('profiles').select('id').eq('is_admin', False).execute()
+    doctors_res  = supabase.table('doctors').select('id').execute()
+    apts_res     = supabase.table('appointments').select('id').execute()
+    conf_res     = supabase.table('appointments').select('id').eq('status','Confirmed').execute()
+    canc_res     = supabase.table('appointments').select('id').eq('status','Cancelled').execute()
+
+    try:
+        msgs_res = supabase.table('contact_messages').select('id').eq('is_read', False).execute()
+        unread   = len(msgs_res.data or [])
+    except Exception:
+        unread = 0
 
     return jsonify({'success': True, 'stats': {
-        'total_patients':  patients_res.count or 0,
-        'total_doctors':   doctors_res.count  or 0,
-        'total_apts':      apts_res.count     or 0,
-        'confirmed':       conf_res.count     or 0,
-        'cancelled':       canc_res.count     or 0,
-        'unread_messages': msgs_res.count     or 0,
+        'total_patients':  len(patients_res.data or []),
+        'total_doctors':   len(doctors_res.data  or []),
+        'total_apts':      len(apts_res.data     or []),
+        'confirmed':       len(conf_res.data     or []),
+        'cancelled':       len(canc_res.data     or []),
+        'unread_messages': unread,
     }})
+
 
 
 @app.route('/api/admin/appointments', methods=['GET'])
 @admin_required
 def admin_appointments():
+    # WHY no profiles(email)? Because email is stored in Supabase Auth,
+    # NOT in our profiles table. Trying to select it crashes the query.
     result = supabase.table('appointments')\
-        .select('*, doctors(name), profiles(name, phone, email)')\
+        .select('*, doctors(name), profiles(name, phone)')\
         .order('booked_at', desc=True).execute()
 
     apts = []
@@ -854,7 +884,7 @@ def admin_appointments():
             'appointment_id': a['apt_id'],
             'patient_name':   (a.get('profiles') or {}).get('name', 'Unknown'),
             'patient_phone':  (a.get('profiles') or {}).get('phone', ''),
-            'patient_email':  (a.get('profiles') or {}).get('email', ''),
+            'patient_email':  '',
             'doctor':         (a.get('doctors')  or {}).get('name', 'Any Available Doctor'),
             'specialty':      a['specialty'],
             'date':           a['date'],
@@ -878,9 +908,21 @@ def admin_update_apt(apt_id):
 @app.route('/api/admin/users', methods=['GET'])
 @admin_required
 def admin_users():
-    result = supabase.table('profiles').select('*')\
-        .eq('is_admin', False).order('created_at', desc=True).execute()
-    return jsonify({'success': True, 'total': len(result.data or []), 'users': result.data or []})
+    # WHY no order('created_at')? The profiles table has no created_at column.
+    # We order by name instead which always works.
+    result = supabase.table('profiles').select('id,name,phone,is_admin')\
+        .eq('is_admin', False).order('name').execute()
+    users = [
+        {
+            'id':           str(u.get('id','')),
+            'name':         u.get('name', ''),
+            'email':        '',   # email is in Supabase Auth, not profiles table
+            'phone':        u.get('phone', ''),
+            'member_since': '',
+        }
+        for u in (result.data or [])
+    ]
+    return jsonify({'success': True, 'total': len(users), 'users': users})
 
 
 @app.route('/api/admin/messages', methods=['GET'])

@@ -253,6 +253,17 @@ tr:hover td{background:rgba(255,255,255,.02)}
 const API = 'http://localhost:5000';
 let currentTab = 'appointments';
 
+// JWT Helper
+function authHeaders() {
+  const t = localStorage.getItem('adminToken');
+  return { 'Content-Type': 'application/json', ...(t ? {'Authorization': 'Bearer ' + t} : {}) };
+}
+
+function authHeadersOnly() {
+  const t = localStorage.getItem('adminToken');
+  return t ? { 'Authorization': 'Bearer ' + t } : {};
+}
+
 // ── Login ──────────────────────────────────────────────────
 async function adminLogin() {
   const email = document.getElementById('adminEmail').value;
@@ -261,7 +272,7 @@ async function adminLogin() {
   err.style.display = 'none';
 
   const res = await fetch(`${API}/api/login`, {
-    method:'POST', credentials:'include',
+    method:'POST',
     headers:{'Content-Type':'application/json'},
     body: JSON.stringify({email, password: pass})
   }).catch(() => null);
@@ -274,6 +285,10 @@ async function adminLogin() {
     err.style.display = 'block';
     return;
   }
+  
+  if (data.session && data.session.access_token) {
+    localStorage.setItem('adminToken', data.session.access_token);
+  }
 
   document.getElementById('loginGate').style.display  = 'none';
   document.getElementById('adminPanel').style.display  = 'block';
@@ -283,13 +298,14 @@ async function adminLogin() {
 }
 
 async function adminLogout() {
-  await fetch(`${API}/api/logout`, {method:'POST', credentials:'include'});
+  await fetch(`${API}/api/logout`, {method:'POST', headers: authHeadersOnly()});
+  localStorage.removeItem('adminToken');
   location.reload();
 }
 
 // ── Stats ──────────────────────────────────────────────────
 async function loadStats() {
-  const res  = await fetch(`${API}/api/admin/stats`, {credentials:'include'});
+  const res  = await fetch(`${API}/api/admin/stats`, {headers: authHeadersOnly()});
   const data = await res.json();
   if (!data.success) return;
   const s = data.stats;
@@ -317,7 +333,7 @@ function switchTab(tab, btn) {
 
 // ── Appointments ───────────────────────────────────────────
 async function loadAppointments() {
-  const res  = await fetch(`${API}/api/admin/appointments`, {credentials:'include'});
+  const res  = await fetch(`${API}/api/admin/appointments`, {headers: authHeadersOnly()});
   const data = await res.json();
   const body = document.getElementById('aptBody');
   document.getElementById('apt-count').textContent = data.total || 0;
@@ -344,8 +360,8 @@ async function loadAppointments() {
 
 async function updateApt(id, status) {
   await fetch(`${API}/api/admin/appointments/${id}`, {
-    method:'PUT', credentials:'include',
-    headers:{'Content-Type':'application/json'},
+    method:'PUT',
+    headers: authHeaders(),
     body: JSON.stringify({status})
   });
   loadAppointments();
@@ -354,7 +370,7 @@ async function updateApt(id, status) {
 
 // ── Patients ───────────────────────────────────────────────
 async function loadPatients() {
-  const res  = await fetch(`${API}/api/admin/users`, {credentials:'include'});
+  const res  = await fetch(`${API}/api/admin/users`, {headers: authHeadersOnly()});
   const data = await res.json();
   const body = document.getElementById('patBody');
   document.getElementById('pat-count').textContent = data.total || 0;
@@ -375,7 +391,7 @@ async function loadPatients() {
 
 // ── Doctors ────────────────────────────────────────────────
 async function loadDoctors() {
-  const res  = await fetch(`${API}/api/doctors`, {credentials:'include'});
+  const res  = await fetch(`${API}/api/doctors`); // Doctors API is public
   const data = await res.json();
   const grid = document.getElementById('doctorGrid');
 
@@ -397,7 +413,7 @@ async function loadDoctors() {
 
 // ── Messages ───────────────────────────────────────────────
 async function loadMessages() {
-  const res  = await fetch(`${API}/api/admin/messages`, {credentials:'include'});
+  const res  = await fetch(`${API}/api/admin/messages`, {headers: authHeadersOnly()});
   const data = await res.json();
   const body = document.getElementById('msgBody');
   document.getElementById('msg-count').textContent = data.messages ? data.messages.length : 0;
@@ -419,7 +435,7 @@ async function loadMessages() {
 }
 
 async function markRead(id) {
-  await fetch(`${API}/api/admin/messages/${id}/read`, {method:'PUT', credentials:'include'});
+  await fetch(`${API}/api/admin/messages/${id}/read`, {method:'PUT', headers: authHeadersOnly()});
   loadMessages();
   loadStats();
 }

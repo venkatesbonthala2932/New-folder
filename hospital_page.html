@@ -263,6 +263,30 @@ select,input{font-family:inherit}
 .btn-cancel-apt{background:rgba(186,26,26,.08);color:var(--error);border:1px solid rgba(186,26,26,.2);
   border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;margin-top:8px;transition:.2s}
 .btn-cancel-apt:hover{background:rgba(186,26,26,.18)}
+
+/* ── FIX: Google OAuth Button ─────────────────────────────── */
+.btn-google{
+  width:100%;display:flex;align-items:center;justify-content:center;
+  background:#fff;color:#3c4043;border:1px solid #dadce0;
+  border-radius:8px;padding:10px 14px;font-size:13px;font-weight:600;
+  font-family:inherit;cursor:pointer;transition:background .2s,box-shadow .2s;
+  margin-bottom:12px;
+}
+.btn-google:hover{background:#f8f9fa;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+
+/* ── FIX: OR divider between Google and email form ──────── */
+.or-divider{display:flex;align-items:center;gap:8px;margin:4px 0 14px;color:var(--on-surface-variant)}
+.or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:var(--outline-variant)}
+.or-divider span{font-size:11px;font-weight:600;white-space:nowrap}
+
+/* ── FIX: Field-level error messages ────────────────────── */
+.field-err{
+  display:block;font-size:11px;color:var(--error);
+  margin-top:4px;min-height:16px;font-weight:600;
+}
+
+/* ── FIX: Input invalid state highlight ─────────────────── */
+input.input-invalid{border-color:var(--error) !important;background:rgba(186,26,26,.04)}
 </style>
 </head>
 <body>
@@ -343,7 +367,9 @@ select,input{font-family:inherit}
         <div class="form-row">
           <div>
             <label class="form-label">Preferred Date</label>
-            <input class="form-control" type="date" name="date" id="aptDate"/>
+            <!-- FIX 1: min is set by JS on page load so users CANNOT pick past dates -->
+            <input class="form-control" type="date" name="date" id="aptDate" required/>
+            <span class="field-err" id="date-err"></span>
           </div>
           <div>
             <label class="form-label">Preferred Time</label>
@@ -359,7 +385,10 @@ select,input{font-family:inherit}
         </div>
         <div>
           <label class="form-label">Mobile Number</label>
-          <input class="form-control" type="tel" name="patient_phone" id="patientPhone" placeholder="10-digit mobile number"/>
+          <!-- FIX 2: maxlength=10, inputmode=numeric blocks non-digits on mobile, pattern enforces digits only -->
+          <input class="form-control" type="tel" name="patient_phone" id="patientPhone"
+            placeholder="10-digit mobile number" maxlength="10" inputmode="numeric" pattern="[0-9]{10}"/>
+          <span class="field-err" id="phone-err"></span>
         </div>
         <button class="btn-submit" type="submit" id="bookBtn">Check Availability</button>
         <p class="booking-note" id="bookingMsg">Instant confirmation will be sent to your mobile number.</p>
@@ -708,6 +737,20 @@ select,input{font-family:inherit}
     <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
     <h2 class="modal-title">Welcome Back 👋</h2>
     <p class="modal-sub">Log in to book your appointment</p>
+
+    <!-- FIX 3 & 4: Google OAuth button (uses Supabase Auth) -->
+    <button class="btn-google" onclick="doGoogleLogin()">
+      <svg width="18" height="18" viewBox="0 0 48 48" style="margin-right:8px">
+        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.35-8.16 2.35-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+      </svg>
+      Continue with Google
+    </button>
+
+    <div class="or-divider"><span>or login with email</span></div>
+
     <label class="m-label">Email Address</label>
     <input class="m-input" id="li-email" type="email" placeholder="yourname@email.com"/>
     <label class="m-label">Password</label>
@@ -724,12 +767,29 @@ select,input{font-family:inherit}
     <button class="modal-close" onclick="closeModal('registerModal')">✕</button>
     <h2 class="modal-title">Create Account</h2>
     <p class="modal-sub">Register as a new patient at Aadityaa Hospital</p>
+
+    <!-- FIX 3 & 4: Google signup -->
+    <button class="btn-google" onclick="doGoogleLogin()">
+      <svg width="18" height="18" viewBox="0 0 48 48" style="margin-right:8px">
+        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.35-8.16 2.35-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+      </svg>
+      Continue with Google
+    </button>
+
+    <div class="or-divider"><span>or register with email</span></div>
+
     <label class="m-label">Full Name</label>
     <input class="m-input" id="rg-name" type="text" placeholder="e.g. Venkatesh Bonthala"/>
     <label class="m-label">Email Address</label>
     <input class="m-input" id="rg-email" type="email" placeholder="yourname@email.com"/>
     <label class="m-label">Mobile Number</label>
-    <input class="m-input" id="rg-phone" type="tel" placeholder="10-digit mobile number"/>
+    <!-- FIX 2: maxlength=10, numeric only -->
+    <input class="m-input" id="rg-phone" type="tel" placeholder="10-digit mobile number"
+           maxlength="10" inputmode="numeric" pattern="[0-9]{10}"/>
+    <span class="field-err" id="rg-phone-err"></span>
     <label class="m-label">Password <span style="font-size:10px;font-weight:400">(min 6 characters)</span></label>
     <input class="m-input" id="rg-pass" type="password" placeholder="Create a strong password"/>
     <button class="m-btn" id="rg-btn" onclick="doRegister()">Create Account</button>
@@ -863,7 +923,24 @@ async function doLogin() {
 
 // ── Register ───────────────────────────────────────────────
 async function doRegister() {
-  const btn = document.getElementById('rg-btn');
+  const btn       = document.getElementById('rg-btn');
+  const phoneEl   = document.getElementById('rg-phone');
+  const phoneErr  = document.getElementById('rg-phone-err');
+
+  // FIX 2: Validate phone BEFORE sending to server
+  const phone = phoneEl.value.replace(/\D/g, ''); // strip non-digits
+  phoneErr.textContent = '';
+  phoneEl.classList.remove('input-invalid');
+
+  if (phone.length === 0) {
+    phoneErr.textContent = '\u26a0\ufe0f Phone number is required.';
+    phoneEl.classList.add('input-invalid'); phoneEl.focus(); return;
+  }
+  if (phone.length !== 10) {
+    phoneErr.textContent = `\u274c Must be exactly 10 digits (you entered ${phone.length}).`;
+    phoneEl.classList.add('input-invalid'); phoneEl.focus(); return;
+  }
+
   btn.disabled = true; btn.textContent = 'Creating account...';
 
   const res = await fetch(`${API}/api/register`, {
@@ -872,23 +949,22 @@ async function doRegister() {
     body: JSON.stringify({
       name:     document.getElementById('rg-name').value.trim(),
       email:    document.getElementById('rg-email').value.trim(),
-      phone:    document.getElementById('rg-phone').value.trim(),
+      phone:    phone,
       password: document.getElementById('rg-pass').value
     })
   }).catch(() => null);
 
   btn.disabled = false; btn.textContent = 'Create Account';
 
-  if (!res) { showMsg('rg-msg','error','❌ Cannot reach server.'); return; }
+  if (!res) { showMsg('rg-msg','error','\u274c Cannot reach server.'); return; }
   const data = await res.json();
 
   if (data.success) {
-    // Auto-login after registration — save the token
     if (data.session?.access_token) saveToken(data.session.access_token);
     setLoggedIn(data.user);
     closeModal('registerModal');
   } else {
-    showMsg('rg-msg','error','❌ ' + data.message);
+    showMsg('rg-msg','error','\u274c ' + data.message);
   }
 }
 
@@ -964,35 +1040,62 @@ async function doChangePhone() {
   }
 }
 
-// ── Booking Form ───────────────────────────────────────────
+// ── Booking Form (with FIX 1 date  + FIX 2 phone validation) ────────
 document.getElementById('bookingForm').addEventListener('submit', async function(e) {
   e.preventDefault();
-  const btn   = document.getElementById('bookBtn');
-  const msgEl = document.getElementById('bookingMsg');
+  const btn     = document.getElementById('bookBtn');
+  const msgEl   = document.getElementById('bookingMsg');
+  const dateEl  = document.getElementById('aptDate');
+  const phoneEl = document.getElementById('patientPhone');
+  const dateErr = document.getElementById('date-err');
+  const phoneErr= document.getElementById('phone-err');
 
-  // WHY check token too? currentUser is set in memory (lost on refresh).
-  // But the JWT token stays in localStorage across refreshes.
-  // So even if currentUser is null in memory, the token proves they're logged in.
+  // Reset previous error highlights
+  dateErr.textContent = ''; phoneErr.textContent = '';
+  dateEl.classList.remove('input-invalid');
+  phoneEl.classList.remove('input-invalid');
+
+  // FIX 1: Reject past dates
+  const today    = new Date(); today.setHours(0,0,0,0);
+  const chosenRaw= dateEl.value;   // "YYYY-MM-DD"
+  const chosen   = chosenRaw ? new Date(chosenRaw + 'T00:00:00') : null;
+  if (!chosenRaw) {
+    dateErr.textContent = '\u26a0\ufe0f Please select an appointment date.';
+    dateEl.classList.add('input-invalid'); dateEl.focus(); return;
+  }
+  if (chosen < today) {
+    dateErr.textContent = '\u274c Past dates are not allowed. Please pick today or a future date.';
+    dateEl.classList.add('input-invalid'); dateEl.focus(); return;
+  }
+
+  // FIX 2: Reject non-10-digit phone
+  const phone = phoneEl.value.replace(/\D/g, '');
+  if (!phone) {
+    phoneErr.textContent = '\u26a0\ufe0f Mobile number is required.';
+    phoneEl.classList.add('input-invalid'); phoneEl.focus(); return;
+  }
+  if (phone.length !== 10) {
+    phoneErr.textContent = `\u274c Must be exactly 10 digits (you entered ${phone.length}).`;
+    phoneEl.classList.add('input-invalid'); phoneEl.focus(); return;
+  }
+
+  // Auth check
   if (!currentUser && !getToken()) {
     msgEl.style.color = 'var(--error)';
-    msgEl.textContent = '❌ Please login first to book an appointment.';
+    msgEl.textContent = '\u274c Please login first to book an appointment.';
     setTimeout(() => openModal('loginModal'), 800);
     return;
   }
 
-  btn.textContent = 'Booking...'; btn.disabled = true;
-  msgEl.style.color   = 'var(--secondary)';
-  msgEl.textContent   = 'Please wait...';
+  btn.textContent = '\u23f3 Booking...'; btn.disabled = true;
+  msgEl.style.color = 'var(--secondary)'; msgEl.textContent = 'Please wait...';
 
-  // WHY authHeaders()? /api/book has @login_required.
-  // It checks the Authorization: Bearer <token> header.
-  // Without it, Flask says "Please log in" even though the user IS logged in.
   const res = await fetch(`${API}/api/book`, {
     method: 'POST',
     headers: authHeaders(),
     body: JSON.stringify({
       specialty: document.getElementById('specialty').value,
-      date:      document.getElementById('aptDate').value,
+      date:      chosenRaw,
       time_slot: document.getElementById('timeSlot').value,
       notes:     ''
     })
@@ -1000,15 +1103,16 @@ document.getElementById('bookingForm').addEventListener('submit', async function
 
   btn.textContent = 'Check Availability'; btn.disabled = false;
 
-  if (!res) { msgEl.style.color='var(--error)'; msgEl.textContent='❌ Server not reachable.'; return; }
+  if (!res) { msgEl.style.color='var(--error)'; msgEl.textContent='\u274c Server not reachable.'; return; }
   const data = await res.json();
   if (data.success) {
     msgEl.style.color = '#00483c';
-    msgEl.textContent = '✅ ' + data.message;
+    msgEl.textContent = '\u2705 ' + data.message;
     document.getElementById('bookingForm').reset();
+    dateEl.min = new Date().toISOString().split('T')[0]; // re-apply min after reset
   } else {
     msgEl.style.color = 'var(--error)';
-    msgEl.textContent = '❌ ' + data.message;
+    msgEl.textContent = '\u274c ' + data.message;
   }
 });
 
@@ -1022,6 +1126,61 @@ function showMsg(id, type, text) {
 // Enter key shortcuts
 document.getElementById('li-pass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
 document.getElementById('rg-pass').addEventListener('keydown', e => { if(e.key==='Enter') doRegister(); });
+
+// FIX 1: Set today as minimum date so calendar blocks past dates visually
+(function setMinDate() {
+  const today = new Date().toISOString().split('T')[0]; // "YYYY-MM-DD"
+  document.getElementById('aptDate').setAttribute('min', today);
+})();
+
+// FIX 2: Block non-numeric keystrokes in ALL phone fields in real-time
+['patientPhone', 'rg-phone', 'ph-new'].forEach(function(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('input', function() {
+    this.value = this.value.replace(/\D/g, '');       // remove non-digits
+    if (this.value.length > 10) this.value = this.value.slice(0, 10); // cap at 10
+  });
+});
+
+// FIX 3 & 4: Google OAuth via Supabase
+// HOW IT WORKS:
+// 1. User clicks "Continue with Google"
+// 2. Supabase redirects to Google's login page
+// 3. Google authenticates the user
+// 4. Google sends user back to your site with a secure token
+// 5. Supabase handles the token and creates a session
+// BEFORE IT WORKS: You must enable Google provider in
+// Supabase Dashboard -> Authentication -> Providers -> Google
+async function doGoogleLogin() {
+  const SUPABASE_URL  = 'https://adxylnurovyjsfccofhd.supabase.co';
+  const SUPABASE_ANON = 'sb_publishable_2wYwm-nm6Q91E0lmWjUT3A_8WT4TOWg';
+
+  // Load Supabase JS only once
+  if (!window.supabase) {
+    await new Promise(function(resolve, reject) {
+      var s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+      s.onload = resolve; s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+
+  var client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+  var result = await client.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: window.location.href }
+  });
+
+  if (result.error) {
+    alert(
+      'Google login failed: ' + result.error.message +
+      '\n\nTo enable it: Supabase Dashboard -> Authentication -> Providers -> Google -> Enable'
+    );
+  }
+  // Browser automatically redirects to Google, then back here
+}
 
 // Run on page load
 checkSession();
