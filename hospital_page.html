@@ -1015,17 +1015,141 @@ document.querySelectorAll('.modal-overlay').forEach(el => {
   el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
 });
 
+// ── Auth Gate Helpers ───────────────────────────────────────────
+// showAuthGate: makes the full-screen wall visible and locks scrolling
+function showAuthGate() {
+  document.getElementById('authGate').classList.remove('hidden');
+  document.body.style.overflow = 'hidden'; // stop scrolling behind the gate
+}
+
+// hideAuthGate: called by setLoggedIn once a valid session is established
+function hideAuthGate() {
+  document.getElementById('authGate').classList.add('hidden');
+  document.body.style.overflow = ''; // restore normal scrolling
+}
+
+// switchGateTab: switches between Login and Register views inside the gate
+function switchGateTab(tab) {
+  document.getElementById('gatePanelLogin').classList.toggle('active',    tab === 'login');
+  document.getElementById('gatePanelRegister').classList.toggle('active', tab === 'register');
+  document.getElementById('gateTabLogin').classList.toggle('active',    tab === 'login');
+  document.getElementById('gateTabRegister').classList.toggle('active', tab === 'register');
+}
+
+// ── Gate Login ────────────────────────────────────────────────
+// Same logic as doLogin() but reads from the gate fields (gate-li-email, gate-li-pass)
+// WHY separate? The gate fields have different IDs from the modal fields.
+async function doGateLogin() {
+  const btn = document.getElementById('gate-li-btn');
+  const msg = document.getElementById('gate-li-msg');
+  btn.disabled = true; btn.textContent = 'Logging in...';
+  msg.className = 'm-msg'; msg.textContent = '';
+
+  const res = await fetch(`${API}/api/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email:    document.getElementById('gate-li-email').value.trim(),
+      password: document.getElementById('gate-li-pass').value
+    })
+  }).catch(() => null);
+
+  btn.disabled = false; btn.textContent = 'Login';
+
+  if (!res) { showMsg('gate-li-msg','error','\u274c Cannot reach server. Is Flask running?'); return; }
+  const data = await res.json();
+
+  if (data.success) {
+    if (data.session?.access_token) saveToken(data.session.access_token);
+    setLoggedIn(data.user);   // hides gate, shows page
+  } else {
+    showMsg('gate-li-msg', 'error', '\u274c ' + data.message);
+  }
+}
+
+// ── Gate Register ──────────────────────────────────────────────
+async function doGateRegister() {
+  const btn      = document.getElementById('gate-rg-btn');
+  const phoneEl  = document.getElementById('gate-rg-phone');
+  const phoneErr = document.getElementById('gate-rg-phone-err');
+  const phone    = phoneEl.value.replace(/\D/g, '');
+
+  phoneErr.textContent = '';
+  phoneEl.classList.remove('input-invalid');
+
+  if (!phone) {
+    phoneErr.textContent = '\u26a0\ufe0f Phone number is required.';
+    phoneEl.classList.add('input-invalid'); phoneEl.focus(); return;
+  }
+  if (phone.length !== 10) {
+    phoneErr.textContent = `\u274c Must be 10 digits (you entered ${phone.length}).`;
+    phoneEl.classList.add('input-invalid'); phoneEl.focus(); return;
+  }
+
+  btn.disabled = true; btn.textContent = 'Creating account...';
+
+  const res = await fetch(`${API}/api/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      name:     document.getElementById('gate-rg-name').value.trim(),
+      email:    document.getElementById('gate-rg-email').value.trim(),
+      phone:    phone,
+      password: document.getElementById('gate-rg-pass').value
+    })
+  }).catch(() => null);
+
+  btn.disabled = false; btn.textContent = 'Create Account';
+
+  if (!res) { showMsg('gate-rg-msg','error','\u274c Cannot reach server.'); return; }
+  const data = await res.json();
+
+  if (data.success) {
+    if (data.session?.access_token) saveToken(data.session.access_token);
+    setLoggedIn(data.user);   // hides gate, shows page
+  } else {
+    showMsg('gate-rg-msg', 'error', '\u274c ' + data.message);
+  }
+}
+
+// Enter key in gate fields
+document.getElementById('gate-li-pass').addEventListener('keydown', e => { if(e.key==='Enter') doGateLogin(); });
+document.getElementById('gate-rg-pass').addEventListener('keydown', e => { if(e.key==='Enter') doGateRegister(); });
+
+// Phone input enforcement for gate register form
+document.getElementById('gate-rg-phone').addEventListener('input', function() {
+  this.value = this.value.replace(/\D/g, '');
+  if (this.value.length > 10) this.value = this.value.slice(0, 10);
+});
+
 // ── Check session on page load ─────────────────────────────
-// WHY /api/me? Sends our stored token → server verifies it → returns user info
+// HOW THE GATE WORKS:
+// 1. Page loads → auth gate is VISIBLE (CSS default: display:flex)
+// 2. We check localStorage for a JWT token
+// 3. No token → showAuthGate() keeps the wall up → user must login
+// 4. Token found → ask server /api/me to verify it
+// 5. Server confirms → setLoggedIn() → hideAuthGate() → page revealed
+// 6. Token invalid/expired → clearToken() + showAuthGate() → login again
 async function checkSession() {
   const token = getToken();
-  if (!token) return; // no token = not logged in, skip
+
+  if (!token) {
+    showAuthGate(); // no token = definitely not logged in, show the wall
+    return;
+  }
+
   try {
     const res  = await fetch(`${API}/api/me`, { headers: authHeaders() });
     const data = await res.json();
-    if (data.success) setLoggedIn(data.user);
-    else clearToken(); // token expired or invalid — clear it
-  } catch(e) {}
+    if (data.success) {
+      setLoggedIn(data.user); // valid token → hides gate, shows full page
+    } else {
+      clearToken();  // token expired or revoked
+      showAuthGate(); // force login again
+    }
+  } catch(e) {
+    showAuthGate(); // server unreachable → keep gate up (security first)
+  }
 }
 
 function setLoggedIn(user) {
@@ -1051,6 +1175,13 @@ function setLoggedOut() {
   document.getElementById('navUser').style.display  = 'none';
   document.getElementById('patientName').value  = '';
   document.getElementById('patientPhone').value = '';
+  // Show the auth gate again after logout — user must re-login to access the site
+  showAuthGate();
+  // Reset gate form to login tab
+  switchGateTab('login');
+  document.getElementById('gate-li-email').value = '';
+  document.getElementById('gate-li-pass').value  = '';
+  document.getElementById('gate-li-msg').textContent = '';
 }
 
 // ── Login ──────────────────────────────────────────────────

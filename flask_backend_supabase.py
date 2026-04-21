@@ -972,11 +972,11 @@ def health():
 
 if __name__ == '__main__':
     print('=' * 60)
-    print('  🏥 Aadityaa Hospital Backend — Supabase Version')
-    print('  → Database: Supabase PostgreSQL (cloud)')
-    print('  → Auth:     Supabase JWT tokens')
-    print('  → Storage:  Supabase Storage (lab reports)')
-    print(f'  → Supabase: {"✅ Connected" if SUPABASE_URL else "❌ NOT CONFIGURED — check .env"}')
+    print('  [HOSPITAL] Aadityaa Hospital Backend - Supabase Version')
+    print('  -> Database: Supabase PostgreSQL (cloud)')
+    print('  -> Auth:     Supabase JWT tokens')
+    print('  -> Storage:  Supabase Storage (lab reports)')
+    print(f'  -> Supabase: {"[OK] Connected" if SUPABASE_URL else "[ERROR] NOT CONFIGURED - check .env"}')
     print('=' * 60)
     # WHY PORT from env? Render.com assigns a random port at runtime.
     # If we hardcode 5000, Render can't connect to our app and it fails.
