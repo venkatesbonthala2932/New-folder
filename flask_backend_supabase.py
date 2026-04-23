@@ -179,16 +179,18 @@ def get_current_user():
 
         # Step 3: Fetch profile (name, phone, is_admin) from our DB
         profile_res = supabase.table('profiles').select('*').eq('id', user_id).maybe_single().execute()
-        profile_data = profile_res.data or {}
+        profile_data = profile_res.data if profile_res else {}
         profile_data['email'] = email
         profile_data['id']    = str(user_id)
 
         # If profile missing (e.g. RLS blocked insert during registration)
         # return basic info so login/booking still works
-        if not profile_res.data:
-            profile_data['name']     = email.split('@')[0] if email else 'User'
-            profile_data['phone']    = ''
-            profile_data['is_admin'] = False
+        if not profile_res or not profile_res.data:
+            profile_data['name']      = email.split('@')[0] if email else 'User'
+            profile_data['phone']     = ''
+            profile_data['is_admin']  = False
+            profile_data['is_doctor'] = False
+            profile_data['doctor_id'] = None
 
         return profile_data
     except Exception as e:
@@ -221,6 +223,17 @@ def admin_required(f):
         user = get_current_user()
         if not user or not user.get('is_admin'):
             return jsonify({'success': False, 'message': 'Admin access required.'}), 403
+        return f(*args, **kwargs)
+    return wrapper
+
+
+def doctor_required(f):
+    """Route decorator: blocks non-doctor users."""
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        user = get_current_user()
+        if not user or not user.get('is_doctor'):
+            return jsonify({'success': False, 'message': 'Doctor access required.'}), 403
         return f(*args, **kwargs)
     return wrapper
 
@@ -425,10 +438,10 @@ def login():
 
     # Fetch profile — use maybe_single() so it doesn't crash if profile is missing
     profile_res = supabase.table('profiles').select('*').eq('id', auth_user.id).maybe_single().execute()
-    profile_data = profile_res.data or {}
+    profile_data = profile_res.data if profile_res else {}
 
     # Auto-create missing profile (happens when RLS blocked the INSERT during registration)
-    if not profile_res.data:
+    if not profile_res or not profile_res.data:
         try:
             supabase.table('profiles').insert({
                 'id':       str(auth_user.id),
@@ -869,6 +882,35 @@ def admin_stats():
 
 
 
+@app.route('/api/doctor/appointments', methods=['GET'])
+@doctor_required
+def doctor_appointments():
+    user = get_current_user()
+    if not user.get('doctor_id'):
+        return jsonify({'success': False, 'message': 'Doctor ID not linked to your profile.'}), 400
+
+    # WHY: RLS protects this, but explicitly filtering by doctor_id is good practice
+    result = supabase.table('appointments')\
+        .select('*, doctors(name), profiles(name, phone)')\
+        .eq('doctor_id', user['doctor_id'])\
+        .order('date', desc=False).execute()
+
+    apts = []
+    for a in (result.data or []):
+        apts.append({
+            'appointment_id': a['apt_id'],
+            'patient_id':     a.get('patient_id'),
+            'patient_name':   (a.get('profiles') or {}).get('name', 'Unknown'),
+            'patient_phone':  (a.get('profiles') or {}).get('phone', ''),
+            'specialty':      a['specialty'],
+            'date':           a['date'],
+            'time_slot':      a['time_slot'],
+            'status':         a['status'],
+            'notes':          a.get('notes', ''),
+        })
+    return jsonify({'success': True, 'total': len(apts), 'appointments': apts})
+
+
 @app.route('/api/admin/appointments', methods=['GET'])
 @admin_required
 def admin_appointments():
@@ -938,6 +980,61 @@ def admin_messages():
 def mark_read(msg_id):
     supabase.table('contact_messages').update({'is_read': True}).eq('id', msg_id).execute()
     return jsonify({'success': True})
+
+
+# ═════════════════════════════════════════════════════════════
+# DOCTOR SPECIFIC ROUTES (PHASES 4 & 5)
+# ═════════════════════════════════════════════════════════════
+
+@app.route('/api/doctor/patients/<patient_id>/history', methods=['GET'])
+@doctor_required
+def doctor_patient_history(patient_id):
+    """Returns past appointments of a specific patient with this doctor."""
+    user = get_current_user()
+    result = supabase.table('appointments')\
+        .select('*')\
+        .eq('patient_id', patient_id)\
+        .eq('doctor_id', user['doctor_id'])\
+        .order('date', desc=True).execute()
+    return jsonify({'success': True, 'history': result.data or []})
+
+@app.route('/api/doctor/surgeries', methods=['GET', 'POST'])
+@doctor_required
+def doctor_surgeries():
+    """Allows a doctor to view their surgeries, or schedule a new one."""
+    user = get_current_user()
+    if request.method == 'POST':
+        data = request.get_json()
+        new_surgery = {
+            'patient_id': data.get('patient_id'),
+            'doctor_id': user['doctor_id'],
+            'surgery_type': data.get('surgery_type'),
+            'scheduled_date': data.get('scheduled_date'),
+            'notes': data.get('notes', '')
+        }
+        res = supabase.table('surgeries').insert(new_surgery).execute()
+        return jsonify({'success': True, 'surgery': res.data[0] if res.data else {}})
+    else:
+        # GET request
+        result = supabase.table('surgeries')\
+            .select('*, profiles(name, phone)')\
+            .eq('doctor_id', user['doctor_id'])\
+            .order('scheduled_date', desc=False).execute()
+        return jsonify({'success': True, 'surgeries': result.data or []})
+
+
+# ═════════════════════════════════════════════════════════════
+# ADMIN SURGERIES (PHASE 3)
+# ═════════════════════════════════════════════════════════════
+
+@app.route('/api/admin/surgeries', methods=['GET'])
+@admin_required
+def admin_surgeries():
+    """Admin view: all surgeries across the hospital."""
+    result = supabase.table('surgeries')\
+        .select('*, profiles(name, phone), doctors(name)')\
+        .order('scheduled_date', desc=False).execute()
+    return jsonify({'success': True, 'surgeries': result.data or []})
 
 
 # ═════════════════════════════════════════════════════════════

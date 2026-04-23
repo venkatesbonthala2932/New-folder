@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Doctor Dashboard | Aadityaa Hospital</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f8fafb;--surface:#ffffff;--surface2:#f1f3f5;--border:#e1e3e4;
+  --primary:#00483c;--primary-dim:#006655;--secondary:#00c48c;--error:#e53e3e;
+  --text:#1a202c;--muted:#718096;--info:#3182ce;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;border:none;font-family:inherit}
+.material-symbols-outlined{font-size:20px;vertical-align:middle}
+
+/* ── HEADER ── */
+.doctor-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;height:64px;background:var(--surface);
+  border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+.header-brand{display:flex;align-items:center;gap:10px}
+.header-logo{width:36px;height:36px;background:var(--secondary);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px}
+.header-title{font-family:'Manrope',sans-serif;font-weight:800;font-size:1rem;color:var(--primary)}
+.header-subtitle{font-size:11px;color:var(--muted)}
+.header-user{display:flex;align-items:center;gap:12px}
+.doctor-badge{background:rgba(0,196,140,.12);color:var(--primary);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.btn-logout{background:rgba(229,62,62,.1);color:var(--error);border:1px solid rgba(229,62,62,.2);
+  padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;transition:.2s}
+.btn-logout:hover{background:rgba(229,62,62,.2)}
+
+/* ── LAYOUT ── */
+.doctor-body{max-width:1200px;margin:0 auto;padding:28px 20px}
+
+/* ── TABS ── */
+.tab-bar{display:flex;gap:4px;margin-bottom:20px;background:var(--surface);
+  padding:6px;border-radius:10px;border:1px solid var(--border);width:fit-content;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);}
+.tab-btn{padding:8px 18px;border-radius:7px;font-size:13px;font-weight:600;
+  color:var(--muted);background:transparent;transition:.2s;display:flex;align-items:center;gap:6px}
+.tab-btn.active{background:var(--primary);color:#fff}
+.tab-btn:hover:not(.active){color:var(--text);background:var(--surface2)}
+
+/* ── PANEL ── */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
+.panel-header{display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;border-bottom:1px solid var(--border)}
+.panel-title{font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px; color:var(--primary)}
+
+/* ── TABLE ── */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:600px}
+th{padding:10px 16px;text-align:left;font-size:11px;font-weight:600;
+   color:var(--muted);text-transform:uppercase;letter-spacing:.05em;
+   background:var(--surface2);border-bottom:1px solid var(--border)}
+td{padding:12px 16px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(0,0,0,.02)}
+
+/* ── BADGES & BUTTONS ── */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;
+  border-radius:20px;font-size:11px;font-weight:700}
+.badge-confirmed{background:rgba(0,196,140,.12);color:var(--secondary)}
+.badge-scheduled{background:rgba(49,130,206,.12);color:var(--info)}
+.badge-cancelled{background:rgba(229,62,62,.12);color:var(--error)}
+
+.btn-primary{background:var(--primary);color:#fff;padding:8px 16px;border-radius:6px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;transition:.2s}
+.btn-primary:hover{background:var(--primary-dim)}
+.btn-sm{padding:5px 12px;border-radius:6px;font-size:12px;font-weight:600;transition:.2s;display:inline-flex;align-items:center;gap:4px; background:var(--surface2); color:var(--text); border:1px solid var(--border)}
+.btn-sm:hover{background:#e2e8f0}
+
+/* ── MODALS ── */
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:100}
+.modal{background:#fff;border-radius:12px;width:100%;max-width:500px;padding:24px;box-shadow:0 10px 25px rgba(0,0,0,0.1)}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--primary)}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px}
+.form-group input, .form-group select, .form-group textarea{width:100%;padding:10px;border:1px solid var(--border);border-radius:6px;font-family:inherit;font-size:14px}
+.modal-actions{display:flex;justify-content:flex-end;gap:12px;margin-top:24px}
+
+/* ── LOGIN GATE ── */
+#loginGate{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--primary)}
+.login-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;
+  padding:40px 36px;width:100%;max-width:380px; box-shadow:0 10px 25px rgba(0,0,0,0.2)}
+.login-title{font-family:'Manrope',sans-serif;font-size:1.25rem;font-weight:800;text-align:center;margin-bottom:6px; color:var(--primary)}
+.login-sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:28px}
+.field-input{width:100%;background:var(--surface2);border:1px solid var(--border);
+  border-radius:8px;padding:12px 14px;font-size:14px;color:var(--text);
+  font-family:inherit;outline:none;transition:.2s;margin-bottom:14px}
+.btn-login{width:100%;background:var(--secondary);color:#fff;border-radius:8px;
+  padding:12px;font-size:14px;font-weight:700;margin-top:4px;transition:.2s}
+.btn-login:hover{opacity:0.9}
+.login-error{color:var(--error);font-size:12px;text-align:center;margin-top:8px;display:none}
+
+#doctorPanel{display:none}
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN GATE ── -->
+<div id="loginGate">
+  <div class="login-box">
+    <div style="text-align:center;font-size:40px;margin-bottom:10px">🩺</div>
+    <h1 class="login-title">Doctor Portal</h1>
+    <p class="login-sub">Aadityaa Hospital Secure Access</p>
+    <input class="field-input" id="docEmail" type="email" placeholder="Email Address"/>
+    <input class="field-input" id="docPass" type="password" placeholder="Password"/>
+    <button class="btn-login" onclick="doctorLogin()">Sign In</button>
+    <p class="login-error" id="loginErr">Incorrect email or password.</p>
+  </div>
+</div>
+
+<!-- ── DOCTOR PANEL ── -->
+<div id="doctorPanel">
+  <header class="doctor-header">
+    <div class="header-brand">
+      <div class="header-logo">🏥</div>
+      <div>
+        <div class="header-title">Aadityaa Hospital</div>
+        <div class="header-subtitle">Doctor Dashboard</div>
+      </div>
+    </div>
+    <div class="header-user">
+      <span class="doctor-badge"><span class="material-symbols-outlined" style="font-size:12px">stethoscope</span> Doctor</span>
+      <span id="docName" style="font-size:14px;font-weight:600"></span>
+      <button class="btn-logout" onclick="doctorLogout()">Logout</button>
+    </div>
+  </header>
+
+  <div class="doctor-body">
+    
+    <!-- Tabs -->
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('appointments',this)">
+        <span class="material-symbols-outlined">calendar_today</span> My Appointments
+      </button>
+      <button class="tab-btn" onclick="switchTab('surgeries',this)">
+        <span class="material-symbols-outlined">healing</span> Surgeries
+      </button>
+    </div>
+
+    <!-- Appointments Tab -->
+    <div id="tab-appointments" class="panel">
+      <div class="panel-header">
+        <div class="panel-title"><span class="material-symbols-outlined">calendar_today</span> Upcoming Appointments</div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Date & Time</th><th>Patient Name</th><th>Contact</th><th>Status</th><th>Actions</th>
+          </tr></thead>
+          <tbody id="aptBody"><tr><td colspan="5" style="text-align:center;padding:20px">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Surgeries Tab -->
+    <div id="tab-surgeries" class="panel" style="display:none">
+      <div class="panel-header">
+        <div class="panel-title"><span class="material-symbols-outlined">healing</span> Scheduled Surgeries</div>
+        <button class="btn-primary" onclick="openSurgeryModal()"><span class="material-symbols-outlined">add</span> Schedule Surgery</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Date</th><th>Patient Name</th><th>Type</th><th>Status</th><th>Notes</th>
+          </tr></thead>
+          <tbody id="surgBody"><tr><td colspan="5" style="text-align:center;padding:20px">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Patient History -->
+<div class="modal-overlay" id="historyModal">
+  <div class="modal">
+    <h3 class="modal-title" id="historyTitle">Patient History</h3>
+    <div style="max-height:300px;overflow-y:auto;font-size:13px" id="historyContent">Loading...</div>
+    <div class="modal-actions">
+      <button class="btn-sm" onclick="closeModal('historyModal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Schedule Surgery -->
+<div class="modal-overlay" id="surgeryModal">
+  <div class="modal">
+    <h3 class="modal-title">Schedule New Surgery</h3>
+    <div class="form-group">
+      <label>Patient ID (UUID)</label>
+      <input type="text" id="surgPatientId" placeholder="e.g. 123e4567-e89b-12d3...">
+      <small style="color:var(--muted);font-size:11px">Copy this from the Appointments table.</small>
+    </div>
+    <div class="form-group">
+      <label>Surgery Type</label>
+      <input type="text" id="surgType" placeholder="e.g. Appendectomy">
+    </div>
+    <div class="form-group">
+      <label>Scheduled Date</label>
+      <input type="date" id="surgDate">
+    </div>
+    <div class="form-group">
+      <label>Notes</label>
+      <textarea id="surgNotes" rows="2" placeholder="Any pre-op notes..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-sm" onclick="closeModal('surgeryModal')">Cancel</button>
+      <button class="btn-primary" onclick="submitSurgery()">Schedule</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'http://localhost:5001'; // Using port 5001 based on our recent changes
+
+function authHeadersOnly() {
+  const t = localStorage.getItem('doctorToken');
+  return t ? { 'Authorization': 'Bearer ' + t } : {};
+}
+function authHeaders() {
+  const t = localStorage.getItem('doctorToken');
+  return { 'Content-Type': 'application/json', ...(t ? {'Authorization': 'Bearer ' + t} : {}) };
+}
+
+// ── LOGIN ──
+async function doctorLogin() {
+  const email = document.getElementById('docEmail').value;
+  const pass  = document.getElementById('docPass').value;
+  const err   = document.getElementById('loginErr');
+  err.style.display = 'none';
+
+  const res = await fetch(`${API}/api/login`, {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({email, password: pass})
+  }).catch(() => null);
+
+  if (!res) { err.textContent = 'Cannot connect to server.'; err.style.display = 'block'; return; }
+  const data = await res.json();
+
+  if (!data.success || !data.user.is_doctor) {
+    err.textContent = data.message || 'Doctor access required. Make sure your account is flagged as a doctor.';
+    err.style.display = 'block';
+    return;
+  }
+  
+  if (data.session && data.session.access_token) {
+    localStorage.setItem('doctorToken', data.session.access_token);
+  }
+
+  document.getElementById('loginGate').style.display = 'none';
+  document.getElementById('doctorPanel').style.display = 'block';
+  document.getElementById('docName').textContent = 'Dr. ' + data.user.name;
+  loadAppointments();
+}
+
+function doctorLogout() {
+  localStorage.removeItem('doctorToken');
+  location.reload();
+}
+
+// ── TABS ──
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-appointments').style.display = tab === 'appointments' ? 'block' : 'none';
+  document.getElementById('tab-surgeries').style.display = tab === 'surgeries' ? 'block' : 'none';
+  
+  if (tab === 'appointments') loadAppointments();
+  if (tab === 'surgeries') loadSurgeries();
+}
+
+// ── DATA FETCHING ──
+async function loadAppointments() {
+  const res = await fetch(`${API}/api/doctor/appointments`, {headers: authHeadersOnly()});
+  const data = await res.json();
+  const body = document.getElementById('aptBody');
+
+  if (!data.appointments || !data.appointments.length) {
+    body.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--muted)">No upcoming appointments.</td></tr>`;
+    return;
+  }
+
+  body.innerHTML = data.appointments.map(a => `
+    <tr>
+      <td><strong>${a.date}</strong><br><span style="font-size:11px;color:var(--muted)">${a.time_slot}</span></td>
+      <td>
+        <strong>${a.patient_name}</strong><br>
+        <span style="font-size:10px;color:var(--muted)">ID: ${a.patient_id}</span>
+      </td>
+      <td>${a.patient_phone}</td>
+      <td><span class="badge badge-${a.status.toLowerCase()}">${a.status}</span></td>
+      <td>
+        <button class="btn-sm" onclick="viewHistory('${a.patient_id}', '${a.patient_name.replace(/'/g,"\\'")}')">View History</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+async function loadSurgeries() {
+  const res = await fetch(`${API}/api/doctor/surgeries`, {headers: authHeadersOnly()});
+  const data = await res.json();
+  const body = document.getElementById('surgBody');
+
+  if (!data.surgeries || !data.surgeries.length) {
+    body.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--muted)">No surgeries scheduled.</td></tr>`;
+    return;
+  }
+
+  body.innerHTML = data.surgeries.map(s => `
+    <tr>
+      <td><strong>${s.scheduled_date}</strong></td>
+      <td>${s.profiles ? s.profiles.name : 'Unknown Patient'}</td>
+      <td>${s.surgery_type}</td>
+      <td><span class="badge badge-scheduled">${s.status}</span></td>
+      <td style="font-size:12px;color:var(--muted);max-width:200px">${s.notes || '--'}</td>
+    </tr>
+  `).join('');
+}
+
+// ── PATIENT HISTORY ──
+async function viewHistory(patientId, patientName) {
+  document.getElementById('historyTitle').textContent = `History: ${patientName}`;
+  document.getElementById('historyContent').innerHTML = "Loading past records...";
+  document.getElementById('historyModal').style.display = 'flex';
+
+  const res = await fetch(`${API}/api/doctor/patients/${patientId}/history`, {headers: authHeadersOnly()});
+  const data = await res.json();
+  
+  if (!data.history || !data.history.length) {
+    document.getElementById('historyContent').innerHTML = "<p>No previous visits found.</p>";
+    return;
+  }
+
+  document.getElementById('historyContent').innerHTML = data.history.map(h => `
+    <div style="border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:10px">
+      <strong>${h.date}</strong> - ${h.time_slot} <br>
+      <span style="color:var(--muted)">Status: ${h.status} | Reason/Notes: ${h.notes || 'None'}</span>
+    </div>
+  `).join('');
+}
+
+// ── MODALS ──
+function openSurgeryModal() { document.getElementById('surgeryModal').style.display = 'flex'; }
+function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+async function submitSurgery() {
+  const payload = {
+    patient_id: document.getElementById('surgPatientId').value,
+    surgery_type: document.getElementById('surgType').value,
+    scheduled_date: document.getElementById('surgDate').value,
+    notes: document.getElementById('surgNotes').value
+  };
+
+  if(!payload.patient_id || !payload.surgery_type || !payload.scheduled_date) {
+    alert("Please fill required fields."); return;
+  }
+
+  await fetch(`${API}/api/doctor/surgeries`, {
+    method:'POST',
+    headers: authHeaders(),
+    body: JSON.stringify(payload)
+  });
+
+  closeModal('surgeryModal');
+  loadSurgeries();
+}
+</script>
+</body>
+</html>
