@@ -288,166 +288,11 @@ select,input{font-family:inherit}
 /* ── FIX: Input invalid state highlight ─────────────────── */
 input.input-invalid{border-color:var(--error) !important;background:rgba(186,26,26,.04)}
 
-/* ── AUTH GATE ─────────────────────────────────────────── */
-/* The full-screen wall shown to unauthenticated users.
-   WHY position:fixed + z-index:9999?
-   This sits above EVERYTHING on the page.
-   Users literally cannot click, scroll, or see any content behind it. */
-#authGate {
-  position: fixed;
-  inset: 0;                        /* top:0; left:0; right:0; bottom:0 */
-  z-index: 9999;                   /* highest layer — above navbar, modals, everything */
-  background: rgba(0,0,0,.75);     /* dark overlay */
-  backdrop-filter: blur(8px);      /* blurs the hospital page behind it */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 0;
-}
-#authGate.hidden { display: none; } /* removed once logged in */
-
-/* The card in the center of the gate — holds the login/register form */
-.gate-card {
-  background: var(--surface, #fff);
-  border-radius: 20px;
-  padding: 40px 36px 32px;
-  width: 100%;
-  max-width: 400px;
-  box-shadow: 0 24px 64px rgba(0,0,0,.5);
-  position: relative;
-  animation: gateSlideIn .35s ease;
-}
-@keyframes gateSlideIn {
-  from { opacity:0; transform:translateY(24px); }
-  to   { opacity:1; transform:translateY(0);    }
-}
-.gate-logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-.gate-logo-icon {
-  width: 44px; height: 44px;
-  background: var(--primary, #00483c);
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  color: #fff; font-size: 22px;
-}
-.gate-logo-text {
-  font-family: 'Manrope', sans-serif;
-  font-weight: 800; font-size: 1.1rem;
-  color: var(--on-surface, #1a1a1a);
-}
-.gate-tabs {
-  display: flex;
-  gap: 0;
-  border: 1px solid var(--outline-variant, #ddd);
-  border-radius: 10px;
-  overflow: hidden;
-  margin-bottom: 24px;
-}
-.gate-tab {
-  flex: 1;
-  padding: 9px 0;
-  font-size: 13px;
-  font-weight: 700;
-  font-family: inherit;
-  border: none;
-  cursor: pointer;
-  background: transparent;
-  color: var(--on-surface-variant, #555);
-  transition: background .2s, color .2s;
-}
-.gate-tab.active {
-  background: var(--primary, #00483c);
-  color: #fff;
-}
-.gate-panel { display: none; }
-.gate-panel.active { display: block; }
 </style>
 </head>
 <body>
 
-<!-- ╔════════════════════════════════════════════════╗
-     AUTH GATE — Full-screen wall shown to logged-out users.
-     HOW IT WORKS:
-     - On page load, JS checks for a stored JWT token.
-     - If no valid token exists → this overlay stays visible, blocking everything.
-     - Once user logs in → JS adds class 'hidden' and the gate disappears.
-     - Users CANNOT close this. No ✕ button. No background click to dismiss.
-╚════════════════════════════════════════════════╝ -->
-<div id="authGate">
-  <div class="gate-card">
-
-    <!-- Hospital branding -->
-    <div class="gate-logo">
-      <div class="gate-logo-icon">
-        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">local_hospital</span>
-      </div>
-      <div>
-        <div class="gate-logo-text">Aadityaa Hospital</div>
-        <div style="font-size:11px;color:var(--on-surface-variant)">Hastinapuram, Hyderabad</div>
-      </div>
-    </div>
-
-    <!-- Login / Register tab switcher -->
-    <div class="gate-tabs">
-      <button class="gate-tab active" id="gateTabLogin" onclick="switchGateTab('login')">Login</button>
-      <button class="gate-tab" id="gateTabRegister" onclick="switchGateTab('register')">Register</button>
-    </div>
-
-    <!-- ── LOGIN panel ── -->
-    <div class="gate-panel active" id="gatePanelLogin">
-      <button class="btn-google" onclick="doGoogleLogin()" style="margin-bottom:14px">
-        <svg width="18" height="18" viewBox="0 0 48 48" style="margin-right:8px">
-          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.35-8.16 2.35-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-        </svg>
-        Continue with Google
-      </button>
-      <div class="or-divider"><span>or login with email</span></div>
-      <label class="m-label">Email Address</label>
-      <input class="m-input" id="gate-li-email" type="email" placeholder="yourname@email.com"/>
-      <label class="m-label">Password</label>
-      <input class="m-input" id="gate-li-pass" type="password" placeholder="••••••••"/>
-      <button class="m-btn" id="gate-li-btn" onclick="doGateLogin()">Login</button>
-      <p class="m-msg" id="gate-li-msg"></p>
-    </div>
-
-    <!-- ── REGISTER panel ── -->
-    <div class="gate-panel" id="gatePanelRegister">
-      <button class="btn-google" onclick="doGoogleLogin()" style="margin-bottom:14px">
-        <svg width="18" height="18" viewBox="0 0 48 48" style="margin-right:8px">
-          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.35-8.16 2.35-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-        </svg>
-        Continue with Google
-      </button>
-      <div class="or-divider"><span>or register with email</span></div>
-      <label class="m-label">Full Name</label>
-      <input class="m-input" id="gate-rg-name" type="text" placeholder="e.g. Venkatesh Bonthala"/>
-      <label class="m-label">Email Address</label>
-      <input class="m-input" id="gate-rg-email" type="email" placeholder="yourname@email.com"/>
-      <label class="m-label">Mobile Number</label>
-      <input class="m-input" id="gate-rg-phone" type="tel" placeholder="10-digit mobile number"
-             maxlength="10" inputmode="numeric" pattern="[0-9]{10}"/>
-      <span class="field-err" id="gate-rg-phone-err"></span>
-      <label class="m-label">Password <span style="font-size:10px;font-weight:400">(min 6 chars)</span></label>
-      <input class="m-input" id="gate-rg-pass" type="password" placeholder="Create a strong password"/>
-      <button class="m-btn" id="gate-rg-btn" onclick="doGateRegister()">Create Account</button>
-      <p class="m-msg" id="gate-rg-msg"></p>
-    </div>
-
-  </div>
-</div>
-<!-- END AUTH GATE -->
+<!-- Auth Gate Removed -->
 
 <!-- NAVIGATION -->
 <header class="site-header">
@@ -515,41 +360,39 @@ input.input-invalid{border-color:var(--error) !important;background:rgba(186,26,
       </h3>
       <form class="booking-form" id="bookingForm">
         <div>
-          <label class="form-label">Select Specialty</label>
-          <select class="form-control" name="specialty" id="specialty">
-            <option>Cardiology</option><option>Orthopaedics</option>
-            <option>Neurology</option><option>Paediatrics</option>
-            <option>Gynaecology</option>
+          <label class="form-label">Step 1: Select Specialty</label>
+          <select class="form-control" name="specialty" id="specialty" onchange="fetchDoctorsForSpecialty()">
+            <option value="" disabled selected>Choose a department...</option>
+            <option value="Cardiology">Cardiology</option>
+            <option value="Orthopaedics">Orthopaedics</option>
+            <option value="Neurology">Neurology</option>
+            <option value="Paediatrics">Paediatrics</option>
+            <option value="Gynaecology">Gynaecology</option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label">Step 2: Select Doctor</label>
+          <select class="form-control" name="doctor_id" id="doctorId" disabled onchange="enableDate()">
+            <option value="" disabled selected>Please select specialty first...</option>
           </select>
         </div>
         <div class="form-row">
           <div>
-            <label class="form-label">Preferred Date</label>
-            <!-- FIX 1: min is set by JS on page load so users CANNOT pick past dates -->
-            <input class="form-control" type="date" name="date" id="aptDate" required/>
+            <label class="form-label">Step 3: Preferred Date</label>
+            <input class="form-control" type="date" name="date" id="aptDate" disabled onchange="enableTime()" required/>
             <span class="field-err" id="date-err"></span>
           </div>
           <div>
-            <label class="form-label">Preferred Time</label>
-            <select class="form-control" name="time_slot" id="timeSlot">
-              <option>Morning (10AM - 1PM)</option>
-              <option>Evening (4PM - 7PM)</option>
+            <label class="form-label">Step 4: Preferred Time</label>
+            <select class="form-control" name="time_slot" id="timeSlot" disabled>
+              <option value="" disabled selected>Select date first...</option>
+              <option value="Morning (10AM - 1PM)">Morning (10AM - 1PM)</option>
+              <option value="Evening (4PM - 7PM)">Evening (4PM - 7PM)</option>
             </select>
           </div>
         </div>
-        <div>
-          <label class="form-label">Your Name</label>
-          <input class="form-control" type="text" name="patient_name" id="patientName" placeholder="e.g. Venkatesh Bonthala"/>
-        </div>
-        <div>
-          <label class="form-label">Mobile Number</label>
-          <!-- FIX 2: maxlength=10, inputmode=numeric blocks non-digits on mobile, pattern enforces digits only -->
-          <input class="form-control" type="tel" name="patient_phone" id="patientPhone"
-            placeholder="10-digit mobile number" maxlength="10" inputmode="numeric" pattern="[0-9]{10}"/>
-          <span class="field-err" id="phone-err"></span>
-        </div>
-        <button class="btn-submit" type="submit" id="bookBtn">Check Availability</button>
-        <p class="booking-note" id="bookingMsg">Instant confirmation will be sent to your mobile number.</p>
+        <button class="btn-submit" type="submit" id="bookBtn">Confirm Booking</button>
+        <p class="booking-note" id="bookingMsg">You will be asked to log in if you haven't already.</p>
       </form>
     </div>
   </div>
@@ -1134,7 +977,7 @@ async function checkSession() {
   const token = getToken();
 
   if (!token) {
-    showAuthGate(); // no token = definitely not logged in, show the wall
+    setLoggedOut();
     return;
   }
 
@@ -1145,10 +988,10 @@ async function checkSession() {
       setLoggedIn(data.user); // valid token → hides gate, shows full page
     } else {
       clearToken();  // token expired or revoked
-      showAuthGate(); // force login again
+      setLoggedOut();
     }
   } catch(e) {
-    showAuthGate(); // server unreachable → keep gate up (security first)
+    setLoggedOut();
   }
 }
 
@@ -1158,14 +1001,14 @@ function setLoggedIn(user) {
   // WHY here? setLoggedIn is called from EVERY login path:
   // gate login, register, checkSession (token restore on refresh).
   // So hiding the gate here ensures it disappears no matter how the user logged in.
-  hideAuthGate();
+  
 
   document.getElementById('navGuest').style.display = 'none';
   document.getElementById('navUser').style.display  = 'flex';
   document.getElementById('navUsername').textContent = user.name.split(' ')[0];
   document.getElementById('navAvatar').textContent   = user.name[0].toUpperCase();
-  document.getElementById('patientName').value  = user.name;
-  document.getElementById('patientPhone').value = user.phone;
+  
+  
 }
 
 function setLoggedOut() {
@@ -1173,10 +1016,10 @@ function setLoggedOut() {
   clearToken();
   document.getElementById('navGuest').style.display = 'flex';
   document.getElementById('navUser').style.display  = 'none';
-  document.getElementById('patientName').value  = '';
-  document.getElementById('patientPhone').value = '';
+  
+  
   // Show the auth gate again after logout — user must re-login to access the site
-  showAuthGate();
+  
   // Reset gate form to login tab
   switchGateTab('login');
   document.getElementById('gate-li-email').value = '';

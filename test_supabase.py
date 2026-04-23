@@ -16,3 +16,4 @@ try:
         print("res.data:", getattr(res, 'data', 'NO DATA ATTR'))
 except Exception as e:
     print("Error:", e)
+ 
