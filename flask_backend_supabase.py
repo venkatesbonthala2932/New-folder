@@ -304,6 +304,17 @@ def admin_page():
 def health_tips():
     return send_from_directory(BASE_DIR, 'health_tips.html')
 
+@app.route('/public_doctors.html')
+def public_doctors_page():
+    return send_from_directory(BASE_DIR, 'public_doctors.html')
+
+@app.route('/public_appointment.html')
+def public_appointment_page():
+    return send_from_directory(BASE_DIR, 'public_appointment.html')
+
+@app.route('/doctors_page.html')
+def doctors_dashboard_page():
+    return send_from_directory(BASE_DIR, 'doctors_page.html')
 
 # ═════════════════════════════════════════════════════════════
 # AUTH ROUTES
